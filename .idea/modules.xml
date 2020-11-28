@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DiscStalker.iml" filepath="$PROJECT_DIR$/.idea/modules/DiscStalker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DiscStalker.main.iml" filepath="$PROJECT_DIR$/.idea/modules/DiscStalker.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/DiscStalker.test.iml" filepath="$PROJECT_DIR$/.idea/modules/DiscStalker.test.iml" />
+    </modules>
+  </component>
+</project>
