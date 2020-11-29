@@ -1,4 +1,4 @@
-package com.frx.disc.stalker.service;
+package com.frx.disc.stalker.service.notification;
 
 import dorkbox.notify.Pos;
 

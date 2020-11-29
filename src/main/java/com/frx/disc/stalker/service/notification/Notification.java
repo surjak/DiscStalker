@@ -1,4 +1,4 @@
-package com.frx.disc.stalker.service;
+package com.frx.disc.stalker.service.notification;
 
 import dorkbox.notify.Notify;
 import dorkbox.notify.Pos;
@@ -11,8 +11,8 @@ public abstract class Notification implements INotification {
 
     protected Notify notification;
 
-    private String title;
-    private String text;
+    private final String title;
+    private final String text;
     private int duration = DEFAULT_DURATION;
     private Pos position = DEFAULT_POSITION;
 
