@@ -3,13 +3,13 @@ package com.frx.disc.stalker.service;
 import dorkbox.notify.Notify;
 import dorkbox.notify.Pos;
 
-// TODO: take advantage of Notify's onAction method
-// TODO: add support for custom notification images
-public class Notification implements INotification {
+// TODO: take advantage of Notify's onAction method in concrete classes such as ErrorNotification
+// TODO: alter concrete classes when more specific use cases come out
+public abstract class Notification implements INotification {
     private static final int DEFAULT_DURATION = 5000;
     private static final Pos DEFAULT_POSITION = Pos.BOTTOM_RIGHT;
 
-    Notify notification;
+    protected Notify notification;
 
     private String title;
     private String text;
@@ -30,39 +30,17 @@ public class Notification implements INotification {
         setNotification();
     }
 
-   private void setNotification() {
-        Notify notification = Notify.create()
+    private void setNotification() {
+        notification = Notify.create()
                 .title(title)
                 .text(text)
                 .hideAfter(duration)
                 .position(position)
                 .darkStyle();
+    }
 
-        this.notification = notification;
-   }
-
-   @Override
-   public void show() {
+    @Override
+    public void show() {
         notification.show();
-   }
-
-   @Override
-   public void showInformation() {
-       notification.showInformation();
-   }
-
-   @Override
-   public void showConfirm() {
-       notification.showConfirm();
-   }
-
-   @Override
-   public void showWarning() {
-       notification.showWarning();
-   }
-
-   @Override
-   public void showError() {
-       notification.showError();
-   }
+    }
 }
