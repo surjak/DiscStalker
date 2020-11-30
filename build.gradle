@@ -9,10 +9,13 @@ version '1.0'
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://dl.bintray.com/speljohan/rxjavafx-mirror"
+    }
 }
 
 application {
-    mainClassName = 'com.frx.disc.stalker.App'
+    mainClassName = 'App'
 }
 javafx {
     version = '15'
@@ -26,11 +29,13 @@ dependencies {
     // https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject
     compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.2.3'
     // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava
-    compile group: 'io.reactivex.rxjava3', name: 'rxjava', version: '3.0.7'
+    implementation group: 'io.reactivex.rxjava3', name: 'rxjava', version: '3.0.7'
     // https://mvnrepository.com/artifact/org.apache.tika/tika-core
     compile group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
     // https://mvnrepository.com/artifact/org.apache.camel/camel-core
     compile group: 'org.apache.camel', name: 'camel-core', version: '3.6.0'
+    implementation group: 'io.reactivex.rxjava3', name: 'rxjavafx', version: '3.0.1'
+
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'

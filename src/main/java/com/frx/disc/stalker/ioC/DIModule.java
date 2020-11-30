@@ -1,5 +1,7 @@
 package com.frx.disc.stalker.ioC;
 
+import com.frx.disc.stalker.fs.LiveDirectoryTreeCreator;
+import com.frx.disc.stalker.fs.LiveDirectoryTreeFactory;
 import com.google.inject.AbstractModule;
 
 /**
@@ -8,6 +10,6 @@ import com.google.inject.AbstractModule;
 public class DIModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(String.class).toInstance("ala");
+        bind(LiveDirectoryTreeFactory.class).to(LiveDirectoryTreeCreator.class);
     }
 }
