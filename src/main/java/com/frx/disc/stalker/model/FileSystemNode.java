@@ -1,6 +1,7 @@
 package com.frx.disc.stalker.model;
 
 import javafx.beans.property.LongProperty;
+import javafx.beans.property.StringProperty;
 
 import java.nio.file.Path;
 
@@ -9,6 +10,8 @@ import java.nio.file.Path;
  */
 public interface FileSystemNode {
   Path getPath();
+
+  StringProperty getNodeNameProperty();
 
   boolean isDirectory();
 

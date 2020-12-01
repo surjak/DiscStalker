@@ -5,7 +5,10 @@ import com.frx.disc.stalker.fs.watcher.DirectoryWatcherEvent;
 import com.frx.disc.stalker.fs.watcher.DirectoryWatcherEventType;
 import com.frx.disc.stalker.model.DirectoryNode;
 import com.frx.disc.stalker.model.FileSystemNode;
+import com.google.inject.assistedinject.Assisted;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -22,12 +25,15 @@ public class LiveDirectoryTree {
   private final Map<Path, DirectoryNode> directoryByPath;
   private final FileSystemScanner fsScanner;
 
-  public LiveDirectoryTree(Path rootPath) throws IOException {
+  public LiveDirectoryTree(@Assisted Path rootPath) throws IOException {
     this.directoryWatcher = new DirectoryWatcher();
     this.directoryByPath = new HashMap<>();
     this.fsScanner = new FileSystemScanner(this::registerNode);
 
-    directoryWatcher.getEventSubject().subscribe(this::handleWatcherEvent);
+    directoryWatcher.getEventSubject()
+            .subscribeOn(Schedulers.io())
+            .observeOn(JavaFxScheduler.platform())
+            .subscribe(this::handleWatcherEvent);
 
     this.root = fsScanner.scanRecursively(rootPath)
         .orElseThrow(() -> new IllegalArgumentException("invalid path"));
@@ -66,7 +72,7 @@ public class LiveDirectoryTree {
         final var size = Files.size(node.getPath());
         node.getSizeProperty().set(size);
       } catch (IOException e) {
-        e.printStackTrace();
+          //ignore for now
       }
     }
   }

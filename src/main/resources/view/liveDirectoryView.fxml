@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.frx.disc.stalker.constollers.LiveDirectoryController"
+            prefHeight="550.0" prefWidth="850.0"
+            minHeight="550.0" minWidth="850.0"
+            stylesheets="css/liveDirectoryView.css"
+            styleClass="main-pane"
+            >
+
+    <left>
+        <TreeTableView fx:id="treeTableView" prefWidth="500"/>
+    </left>
+    <right>
+        <ListView fx:id="listView" prefWidth="500"/>
+    </right>
+</BorderPane>
