@@ -30,7 +30,10 @@ public class LiveDirectoryTree {
     this.directoryByPath = new HashMap<>();
     this.fsScanner = new FileSystemScanner(this::registerNode);
 
-    directoryWatcher.getEventSubject().subscribeOn(Schedulers.io()).observeOn(JavaFxScheduler.platform()).subscribe(this::handleWatcherEvent);
+    directoryWatcher.getEventSubject()
+            .subscribeOn(Schedulers.io())
+            .observeOn(JavaFxScheduler.platform())
+            .subscribe(this::handleWatcherEvent);
 
     this.root = fsScanner.scanRecursively(rootPath)
         .orElseThrow(() -> new IllegalArgumentException("invalid path"));

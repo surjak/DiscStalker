@@ -8,10 +8,10 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.frx.disc.stalker.constollers.MainController"
+            fx:controller="com.frx.disc.stalker.constollers.LiveDirectoryController"
             prefHeight="550.0" prefWidth="850.0"
             minHeight="550.0" minWidth="850.0"
-            stylesheets="css/mainView.css"
+            stylesheets="css/liveDirectoryView.css"
             styleClass="main-pane"
             >
 

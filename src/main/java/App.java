@@ -1,4 +1,4 @@
-import com.frx.disc.stalker.constollers.MainController;
+import com.frx.disc.stalker.constollers.LiveDirectoryController;
 import com.frx.disc.stalker.fs.LiveDirectoryTreeFactory;
 import com.frx.disc.stalker.ioC.DIModule;
 import com.google.inject.Guice;
@@ -18,7 +18,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         var loader = new FXMLLoader();
         BorderPane borderPane = loadMainView(loader, primaryStage);
-        MainController controller = loader.getController();
+        LiveDirectoryController controller = loader.getController();
         configureStage(primaryStage, borderPane);
         primaryStage.show();
 
@@ -37,7 +37,7 @@ public class App extends Application {
     }
 
     private BorderPane loadMainView(FXMLLoader loader, Stage primaryStage) throws java.io.IOException {
-        loader.setLocation(getClass().getResource("view/mainView.fxml"));
+        loader.setLocation(getClass().getResource("view/liveDirectoryView.fxml"));
         return loader.load();
     }
 

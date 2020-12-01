@@ -1,10 +1,7 @@
 package com.frx.disc.stalker.model;
 
 import javafx.beans.Observable;
-import javafx.beans.property.LongProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,12 +13,14 @@ public class DirectoryNode implements FileSystemNode {
   private final ObservableList<FileSystemNode> childNodes;
   private final LongProperty sizeProperty;
   private final LongProperty numberOfFilesProperty;
+  private final StringProperty directoryName;
 
   public DirectoryNode(Path path) {
     this.pathProperty = new SimpleObjectProperty<>(path);
     this.childNodes = FXCollections.observableArrayList();
     this.sizeProperty = new SimpleLongProperty(0);
     this.numberOfFilesProperty = new SimpleLongProperty(0);
+    this.directoryName = new SimpleStringProperty(path.getFileName().toString());
   }
 
   public void addChild(FileSystemNode child) {
@@ -78,6 +77,11 @@ public class DirectoryNode implements FileSystemNode {
   @Override
   public Path getPath() {
     return pathProperty.getValue();
+  }
+
+  @Override
+  public StringProperty getNodeNameProperty() {
+    return directoryName;
   }
 
   @Override

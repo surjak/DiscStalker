@@ -3,9 +3,6 @@ package com.frx.disc.stalker.constollers;
 import com.frx.disc.stalker.fs.LiveDirectoryTree;
 import com.frx.disc.stalker.model.DirectoryNode;
 import com.frx.disc.stalker.model.FileSystemNode;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -15,7 +12,7 @@ import java.util.*;
 /**
  * Created by surja on 29.11.2020
  */
-public class MainController {
+public class LiveDirectoryController {
 
     private DirectoryNode root;
 
@@ -25,17 +22,17 @@ public class MainController {
     @FXML
     public void initialize() {
 
-        TreeTableColumn<FileSystemNode, String> treeTableColumn1 = new TreeTableColumn<>("Path");
-        TreeTableColumn<FileSystemNode, String> treeTableColumn2 = new TreeTableColumn<>("Size");
+        TreeTableColumn<FileSystemNode, String> pathColumn = new TreeTableColumn<>("Path");
+        TreeTableColumn<FileSystemNode, Long> sizeColumn = new TreeTableColumn<>("Size");
 
-        treeTableColumn1.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getPath().getFileName().toString()));
-        treeTableColumn2.setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getValue().getSize().toString()));
-        treeTableColumn1.setEditable(true);
-        treeTableColumn2.setEditable(true);
+        pathColumn.setCellValueFactory(param -> param.getValue().getValue().getNodeNameProperty());
+        sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
+        pathColumn.setEditable(true);
+        sizeColumn.setEditable(true);
         treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
         treeTableView.setEditable(true);
-        treeTableView.getColumns().add(treeTableColumn1);
-        treeTableView.getColumns().add(treeTableColumn2);
+        treeTableView.getColumns().add(pathColumn);
+        treeTableView.getColumns().add(sizeColumn);
 
 
     }
@@ -46,16 +43,6 @@ public class MainController {
         TreeItem rootItem = new TreeItem(root);
         fillTreeTable(rootItem, root);
         treeTableView.setRoot(rootItem);
-        refreshTreeOnChangeEvent(directoryTree);
-    }
-
-    private void refreshTreeOnChangeEvent(LiveDirectoryTree directoryTree) {
-        directoryTree.getEventSubject()
-                .subscribeOn(Schedulers.io())
-                .observeOn(JavaFxScheduler.platform())
-                .subscribe(directoryWatcherEvent -> {
-                    treeTableView.refresh();
-                });
     }
 
 
@@ -86,20 +73,20 @@ public class MainController {
     }
 
     private void handleCreateChange(TreeItem treeItem, ListChangeListener.Change<? extends FileSystemNode> change) {
-        change.getAddedSubList().forEach(systemNode1 -> {
-            TreeItem subTree = new TreeItem(systemNode1);
+        change.getAddedSubList().forEach(node -> {
+            TreeItem subTree = new TreeItem(node);
             treeItem.getChildren().add(subTree);
-            fillTreeTable(subTree, systemNode1);
+            fillTreeTable(subTree, node);
         });
     }
 
     private void handleRemoveChange(TreeItem treeItem, ListChangeListener.Change<? extends FileSystemNode> change) {
-        change.getRemoved().forEach(t->{
+        change.getRemoved().forEach(node->{
             final List<TreeItem<FileSystemNode>> itemsToRemove = new ArrayList<>();
 
             for (Object child : treeItem.getChildren()) {
                 TreeItem treeItem1 = (TreeItem) child;
-                if (treeItem1.getValue().equals(t)){
+                if (treeItem1.getValue().equals(node)){
                     itemsToRemove.add(treeItem1);
                 }
             }
