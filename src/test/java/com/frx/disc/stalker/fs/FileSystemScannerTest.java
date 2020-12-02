@@ -65,12 +65,12 @@ class FileSystemScannerTest {
         Path path = Paths.get("TEST_PATH");
 
         //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-        when(Files.list(path)).thenReturn(Stream.empty());
-        Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
+        when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
+        scanner.scanRecursively(path);
 
         //then
-        assertTrue(fileSystemNode.get().isDirectory());
+        verify(consumer, times(1)).accept(any());
     }
 
     @Test
@@ -79,13 +79,11 @@ class FileSystemScannerTest {
         Path path = Paths.get("TEST_PATH");
 
         //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
-        when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-        when(Files.size(path)).thenReturn(5L);
+        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
         Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
         //then
-        assertFalse(fileSystemNode.get().isDirectory());
+        assertTrue(fileSystemNode.get().isDirectory());
     }
 
     @Test
@@ -102,6 +100,7 @@ class FileSystemScannerTest {
         //then
         assertFalse(fileSystemNode.get().isDirectory());
     }
+
     @Test
     void givenUnexpectedInputPathWhenScanDirectoryThenEmptyOptionalIsReturned() throws IOException {
         //given

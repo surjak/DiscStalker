@@ -66,7 +66,7 @@ class FileSystemNodeTest {
     }
 
     @Test
-    public void givenDirectoryNodeWhenAddFileAsChildThenChildNumberIncreases(){
+    public void givenFileNodeWhenAddFileAsChildThenChildNumberIncreases(){
         //given
         Path path = Paths.get("PATH");
         FileNode childNode = new FileNode(path, 10L);
@@ -79,7 +79,7 @@ class FileSystemNodeTest {
     }
 
     @Test
-    public void givenDirectoryNodeWhenAddFileAsChildThenDirectorySizeIncreases(){
+    public void givenFileNodeWhenAddFileAsChildThenDirectorySizeIncreases(){
         //given
         Long EXPECTED_SIZE = 50L;
         Path path = Paths.get("PATH");
@@ -93,7 +93,7 @@ class FileSystemNodeTest {
     }
 
     @Test
-    public void givenDirectoryNodeWhenAddFileAsChildThenNumberOfFilesIncrease(){
+    public void givenFileNodeWhenAddFileAsChildThenNumberOfFilesIncreases(){
         //given
         Path path = Paths.get("PATH");
         FileNode childNode = new FileNode(path, 10L);
