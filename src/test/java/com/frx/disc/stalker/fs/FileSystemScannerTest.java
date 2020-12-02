@@ -1,9 +1,11 @@
 package com.frx.disc.stalker.fs;
 
 import com.frx.disc.stalker.model.FileSystemNode;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -25,9 +27,16 @@ class FileSystemScannerTest {
     FileSystemScanner scanner;
     Consumer consumer;
 
+    private static MockedStatic<Files> filesMockedStatic;
+
     @BeforeAll
     static void beforeAll() {
-        mockStatic(Files.class);
+        filesMockedStatic = mockStatic(Files.class);
+    }
+
+    @AfterAll
+    static void afterAll() {
+        filesMockedStatic.close();
     }
 
     @BeforeEach
