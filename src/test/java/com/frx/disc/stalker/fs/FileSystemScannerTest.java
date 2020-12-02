@@ -1,6 +1,7 @@
 package com.frx.disc.stalker.fs;
 
 import com.frx.disc.stalker.model.FileSystemNode;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +25,11 @@ class FileSystemScannerTest {
     FileSystemScanner scanner;
     Consumer consumer;
 
+    @BeforeAll
+    static void beforeAll() {
+        mockStatic(Files.class);
+    }
+
     @BeforeEach
     void setUp() {
         consumer = mock(Consumer.class);
@@ -34,7 +40,6 @@ class FileSystemScannerTest {
     void givenDirectoryPathWhenScanDirectoryThenConsumerAcceptIsCalled() throws IOException {
         //given
         Path path = Paths.get("TEST_PATH");
-        mockStatic(Files.class);
 
         //when
         when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
@@ -49,7 +54,6 @@ class FileSystemScannerTest {
     void givenFilePathWhenScanDirectoryThenConsumerAcceptIsCalled() throws IOException {
         //given
         Path path = Paths.get("TEST_PATH");
-        mockStatic(Files.class);
 
         //when
         when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
@@ -64,7 +68,6 @@ class FileSystemScannerTest {
     void givenDirectoryPathWhenScanDirectoryThenFileNodeIsReturnedAndHasProperSize() throws IOException {
         //given
         Path path = Paths.get("TEST_PATH");
-        mockStatic(Files.class);
 
         //when
         when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
@@ -80,7 +83,6 @@ class FileSystemScannerTest {
     void givenFilePathWhenScanDirectoryThenFileNodeIsReturnedAndHasProperSize() throws IOException {
         //given
         Path path = Paths.get("TEST_PATH");
-        mockStatic(Files.class);
 
         //when
         when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
@@ -95,7 +97,6 @@ class FileSystemScannerTest {
     void givenUnexpectedInputPathWhenScanDirectoryThenEmptyOptionalIsReturned() throws IOException {
         //given
         Path path = Paths.get("TEST_PATH");
-        mockStatic(Files.class);
 
         //when
         when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
