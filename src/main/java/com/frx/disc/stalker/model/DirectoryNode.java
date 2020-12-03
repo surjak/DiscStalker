@@ -65,8 +65,8 @@ public class DirectoryNode implements FileSystemNode {
 
   public Optional<FileSystemNode> getChildByPath(Path path) {
     return childNodes.stream()
-        .filter(child -> child.getPath().equals(path))
-        .findAny();
+      .filter(child -> child.getPath().equals(path))
+      .findAny();
   }
 
   @Override
@@ -90,7 +90,7 @@ public class DirectoryNode implements FileSystemNode {
   }
 
   @Override
-  public Long getSize()  {
+  public Long getSize() {
     return sizeProperty.get();
   }
 

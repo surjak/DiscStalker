@@ -8,8 +8,8 @@ import java.nio.file.Path;
  */
 public class LiveDirectoryTreeCreator implements LiveDirectoryTreeFactory {
 
-    @Override
-    public LiveDirectoryTree createAndRegister(Path path) throws IOException {
-        return new LiveDirectoryTree(path);
-    }
+  @Override
+  public LiveDirectoryTree createAndRegister(Path path) throws IOException {
+    return new LiveDirectoryTree(path);
+  }
 }

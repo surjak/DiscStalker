@@ -24,95 +24,95 @@ import static org.mockito.Mockito.*;
  */
 class FileSystemScannerTest {
 
-    FileSystemScanner scanner;
-    Consumer consumer;
+  FileSystemScanner scanner;
+  Consumer consumer;
 
-    private static MockedStatic<Files> filesMockedStatic;
+  private static MockedStatic<Files> filesMockedStatic;
 
-    @BeforeAll
-    static void beforeAll() {
-        filesMockedStatic = mockStatic(Files.class);
-    }
+  @BeforeAll
+  static void beforeAll() {
+    filesMockedStatic = mockStatic(Files.class);
+  }
 
-    @AfterAll
-    static void afterAll() {
-        filesMockedStatic.close();
-    }
+  @AfterAll
+  static void afterAll() {
+    filesMockedStatic.close();
+  }
 
-    @BeforeEach
-    void setUp() {
-        consumer = mock(Consumer.class);
-        scanner = new FileSystemScanner(consumer);
-    }
+  @BeforeEach
+  void setUp() {
+    consumer = mock(Consumer.class);
+    scanner = new FileSystemScanner(consumer);
+  }
 
-    @Test
-    void givenDirectoryPathWhenScanDirectoryThenConsumerAcceptIsCalled() throws IOException {
-        //given
-        Path path = Paths.get("TEST_PATH");
+  @Test
+  void givenDirectoryPathWhenScanDirectoryThenConsumerAcceptIsCalled() throws IOException {
+    //given
+    Path path = Paths.get("TEST_PATH");
 
-        //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-        when(Files.list(path)).thenReturn(Stream.empty());
-        scanner.scanRecursively(path);
+    //when
+    when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
+    when(Files.list(path)).thenReturn(Stream.empty());
+    scanner.scanRecursively(path);
 
-        //then
-        verify(consumer, times(1)).accept(any());
-    }
+    //then
+    verify(consumer, times(1)).accept(any());
+  }
 
-    @Test
-    void givenFilePathWhenScanDirectoryThenConsumerAcceptIsCalled() throws IOException {
-        //given
-        Path path = Paths.get("TEST_PATH");
+  @Test
+  void givenFilePathWhenScanDirectoryThenConsumerAcceptIsCalled() throws IOException {
+    //given
+    Path path = Paths.get("TEST_PATH");
 
-        //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
-        when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-        scanner.scanRecursively(path);
+    //when
+    when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
+    when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
+    scanner.scanRecursively(path);
 
-        //then
-        verify(consumer, times(1)).accept(any());
-    }
+    //then
+    verify(consumer, times(1)).accept(any());
+  }
 
-    @Test
-    void givenDirectoryPathWhenScanDirectoryThenFileNodeIsReturnedAndHasProperSize() throws IOException {
-        //given
-        Path path = Paths.get("TEST_PATH");
+  @Test
+  void givenDirectoryPathWhenScanDirectoryThenFileNodeIsReturnedAndHasProperSize() throws IOException {
+    //given
+    Path path = Paths.get("TEST_PATH");
 
-        //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-        Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+    //when
+    when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
+    Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
-        //then
-        assertTrue(fileSystemNode.get().isDirectory());
-    }
+    //then
+    assertTrue(fileSystemNode.get().isDirectory());
+  }
 
-    @Test
-    void givenFilePathWhenScanDirectoryThenFileNodeIsReturnedAndHasProperSize() throws IOException {
-        //given
-        Path path = Paths.get("TEST_PATH");
+  @Test
+  void givenFilePathWhenScanDirectoryThenFileNodeIsReturnedAndHasProperSize() throws IOException {
+    //given
+    Path path = Paths.get("TEST_PATH");
 
-        //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
-        when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-        when(Files.size(path)).thenReturn(5L);
-        Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+    //when
+    when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
+    when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
+    when(Files.size(path)).thenReturn(5L);
+    Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
-        //then
-        assertFalse(fileSystemNode.get().isDirectory());
-    }
+    //then
+    assertFalse(fileSystemNode.get().isDirectory());
+  }
 
-    @Test
-    void givenUnexpectedInputPathWhenScanDirectoryThenEmptyOptionalIsReturned() throws IOException {
-        //given
-        Path path = Paths.get("TEST_PATH");
+  @Test
+  void givenUnexpectedInputPathWhenScanDirectoryThenEmptyOptionalIsReturned() throws IOException {
+    //given
+    Path path = Paths.get("TEST_PATH");
 
-        //when
-        when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
-        when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
-        Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+    //when
+    when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
+    when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
+    Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
-        //then
-        assertTrue(fileSystemNode.isEmpty());
-    }
+    //then
+    assertTrue(fileSystemNode.isEmpty());
+  }
 
 }

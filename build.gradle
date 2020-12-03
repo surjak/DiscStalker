@@ -1,47 +1,47 @@
 plugins {
-    id 'application'
-    id 'java'
-    id 'org.openjfx.javafxplugin' version '0.0.9'
+  id 'application'
+  id 'java'
+  id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
 group 'com.FRx.disc.stalker'
 version '1.0'
 
 repositories {
-    mavenCentral()
-    maven {
-        url "https://dl.bintray.com/speljohan/rxjavafx-mirror"
-    }
+  mavenCentral()
+  maven {
+    url "https://dl.bintray.com/speljohan/rxjavafx-mirror"
+  }
 }
 
 application {
-    mainClassName = 'App'
+  mainClassName = 'App'
 }
 javafx {
-    version = '15'
-    modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
+  version = '15'
+  modules = ['javafx.base', 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
 }
 apply plugin: 'org.openjfx.javafxplugin'
 
 dependencies {
-    // https://mvnrepository.com/artifact/com.google.inject/guice
-    compile group: 'com.google.inject', name: 'guice', version: '4.2.3'
-    // https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject
-    compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.2.3'
-    // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava
-    implementation group: 'io.reactivex.rxjava3', name: 'rxjavafx', version: '3.0.1'
-    // https://mvnrepository.com/artifact/org.apache.tika/tika-core
-    compile group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
-    // https://mvnrepository.com/artifact/com.dorkbox/Notify
-    compile group: 'com.dorkbox', name: 'Notify', version: '3.7'
+  // https://mvnrepository.com/artifact/com.google.inject/guice
+  compile group: 'com.google.inject', name: 'guice', version: '4.2.3'
+  // https://mvnrepository.com/artifact/com.google.inject.extensions/guice-assistedinject
+  compile group: 'com.google.inject.extensions', name: 'guice-assistedinject', version: '4.2.3'
+  // https://mvnrepository.com/artifact/io.reactivex.rxjava3/rxjava
+  implementation group: 'io.reactivex.rxjava3', name: 'rxjavafx', version: '3.0.1'
+  // https://mvnrepository.com/artifact/org.apache.tika/tika-core
+  compile group: 'org.apache.tika', name: 'tika-core', version: '1.24.1'
+  // https://mvnrepository.com/artifact/com.dorkbox/Notify
+  compile group: 'com.dorkbox', name: 'Notify', version: '3.7'
 // https://mvnrepository.com/artifact/org.assertj/assertj-core
-    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
+  testCompile group: 'org.assertj', name: 'assertj-core', version: '3.18.1'
 // https://mvnrepository.com/artifact/org.mockito/mockito-core
-    testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.6.28'
+  testCompile group: 'org.mockito', name: 'mockito-inline', version: '3.6.28'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
 }
 test {
-    useJUnitPlatform()
+  useJUnitPlatform()
 }

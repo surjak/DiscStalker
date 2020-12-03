@@ -16,92 +16,92 @@ import static org.mockito.Mockito.when;
  */
 class FileSystemNodeTest {
 
-    DirectoryNode directoryNode;
+  DirectoryNode directoryNode;
 
-    @BeforeEach
-    public void initDirectory(){
-        Path path = Paths.get("PATH");
-        directoryNode = new DirectoryNode(path);
-    }
+  @BeforeEach
+  public void initDirectory() {
+    Path path = Paths.get("PATH");
+    directoryNode = new DirectoryNode(path);
+  }
 
-    @Test
-    public void givenDirectoryNodeWhenAddDirectoryAsChildThenChildNumberIncreases(){
-        //given
-        Path path = Paths.get("PATH");
-        DirectoryNode childNode = new DirectoryNode(path);
+  @Test
+  public void givenDirectoryNodeWhenAddDirectoryAsChildThenChildNumberIncreases() {
+    //given
+    Path path = Paths.get("PATH");
+    DirectoryNode childNode = new DirectoryNode(path);
 
-        //when
-        directoryNode.addChild(childNode);
+    //when
+    directoryNode.addChild(childNode);
 
-        //then
-        assertThat(directoryNode.getChildNodes().size()).isEqualTo(1);
-    }
+    //then
+    assertThat(directoryNode.getChildNodes().size()).isEqualTo(1);
+  }
 
-    @Test
-    public void givenDirectoryNodeWhenAddDirectoryAsChildThenDirectorySizeIncreases(){
-        //given
-        Long EXPECTED_SIZE = 50L;
-        Path path = Paths.get("PATH");
-        DirectoryNode childNode = spy(new DirectoryNode(path));
+  @Test
+  public void givenDirectoryNodeWhenAddDirectoryAsChildThenDirectorySizeIncreases() {
+    //given
+    Long EXPECTED_SIZE = 50L;
+    Path path = Paths.get("PATH");
+    DirectoryNode childNode = spy(new DirectoryNode(path));
 
-        //when
-        when(childNode.getSize()).thenReturn(EXPECTED_SIZE);
-        directoryNode.addChild(childNode);
+    //when
+    when(childNode.getSize()).thenReturn(EXPECTED_SIZE);
+    directoryNode.addChild(childNode);
 
-        //then
-        assertThat(directoryNode.getSize()).isEqualTo(EXPECTED_SIZE);
-    }
+    //then
+    assertThat(directoryNode.getSize()).isEqualTo(EXPECTED_SIZE);
+  }
 
-    @Test
-    public void givenDirectoryNodeWhenAddDirectoryAsChildThenNumberOfFilesDoesNotIncrease(){
-        //given
-        Path path = Paths.get("PATH");
-        DirectoryNode childNode = new DirectoryNode(path);
+  @Test
+  public void givenDirectoryNodeWhenAddDirectoryAsChildThenNumberOfFilesDoesNotIncrease() {
+    //given
+    Path path = Paths.get("PATH");
+    DirectoryNode childNode = new DirectoryNode(path);
 
-        //when
-        directoryNode.addChild(childNode);
+    //when
+    directoryNode.addChild(childNode);
 
-        //then
-        assertThat(directoryNode.getNumberOfFiles()).isEqualTo(0L);
-    }
+    //then
+    assertThat(directoryNode.getNumberOfFiles()).isEqualTo(0L);
+  }
 
-    @Test
-    public void givenFileNodeWhenAddFileAsChildThenChildNumberIncreases(){
-        //given
-        Path path = Paths.get("PATH");
-        FileNode childNode = new FileNode(path, 10L);
+  @Test
+  public void givenFileNodeWhenAddFileAsChildThenChildNumberIncreases() {
+    //given
+    Path path = Paths.get("PATH");
+    FileNode childNode = new FileNode(path, 10L);
 
-        //when
-        directoryNode.addChild(childNode);
+    //when
+    directoryNode.addChild(childNode);
 
-        //then
-        assertThat(directoryNode.getChildNodes().size()).isEqualTo(1);
-    }
+    //then
+    assertThat(directoryNode.getChildNodes().size()).isEqualTo(1);
+  }
 
-    @Test
-    public void givenFileNodeWhenAddFileAsChildThenDirectorySizeIncreases(){
-        //given
-        Long EXPECTED_SIZE = 50L;
-        Path path = Paths.get("PATH");
-        FileNode childNode = spy(new FileNode(path, EXPECTED_SIZE));
+  @Test
+  public void givenFileNodeWhenAddFileAsChildThenDirectorySizeIncreases() {
+    //given
+    Long EXPECTED_SIZE = 50L;
+    Path path = Paths.get("PATH");
+    FileNode childNode = spy(new FileNode(path, EXPECTED_SIZE));
 
-        //when
-        directoryNode.addChild(childNode);
+    //when
+    directoryNode.addChild(childNode);
 
-        //then
-        assertThat(directoryNode.getSize()).isEqualTo(EXPECTED_SIZE);
-    }
+    //then
+    assertThat(directoryNode.getSize()).isEqualTo(EXPECTED_SIZE);
+  }
 
-    @Test
-    public void givenFileNodeWhenAddFileAsChildThenNumberOfFilesIncreases(){
-        //given
-        Path path = Paths.get("PATH");
-        FileNode childNode = new FileNode(path, 10L);
+  @Test
+  public void givenFileNodeWhenAddFileAsChildThenNumberOfFilesIncreases() {
+    //given
+    Path path = Paths.get("PATH");
+    FileNode childNode = new FileNode(path, 10L);
 
-        //when
-        directoryNode.addChild(childNode);
+    //when
+    directoryNode.addChild(childNode);
 
-        //then
-        assertThat(directoryNode.getNumberOfFiles()).isEqualTo(1L);
-    }
+    //then
+    assertThat(directoryNode.getNumberOfFiles()).isEqualTo(1L);
+  }
 }

@@ -4,7 +4,9 @@ A project for OOP classes at AGH UST, Poland.
 
 A list of changes is listed in the [CHANGELOG](./CHANGELOG.md) file.
 
-Some random notes related to the development are posted [in a Google doc](https://docs.google.com/document/d/1tPEjTxmNRnkyuUooXjdKY55RkvUr_wm1BR9fZz1xevY/edit?usp=sharing).
+Some random notes related to the development are
+posted [in a Google doc](https://docs.google.com/document/d/1tPEjTxmNRnkyuUooXjdKY55RkvUr_wm1BR9fZz1xevY/edit?usp=sharing)
+.
 
 ## Contributors
 

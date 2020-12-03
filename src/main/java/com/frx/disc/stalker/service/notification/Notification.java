@@ -32,11 +32,11 @@ public abstract class Notification implements INotification {
 
   private void setNotification() {
     notification = Notify.create()
-        .title(title)
-        .text(text)
-        .hideAfter(duration)
-        .position(position)
-        .darkStyle();
+      .title(title)
+      .text(text)
+      .hideAfter(duration)
+      .position(position)
+      .darkStyle();
   }
 
   @Override

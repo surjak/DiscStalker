@@ -41,7 +41,7 @@ public class FileNode implements FileSystemNode {
   }
 
   @Override
-  public Long getSize()  {
+  public Long getSize() {
     return sizeProperty.get();
   }
 

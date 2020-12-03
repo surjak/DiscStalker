@@ -13,12 +13,12 @@
             minHeight="550.0" minWidth="850.0"
             stylesheets="css/liveDirectoryView.css"
             styleClass="main-pane"
-            >
+>
 
-    <left>
-        <TreeTableView fx:id="treeTableView" prefWidth="500"/>
-    </left>
-    <right>
-        <ListView fx:id="listView" prefWidth="500"/>
-    </right>
+  <left>
+    <TreeTableView fx:id="treeTableView" prefWidth="500"/>
+  </left>
+  <right>
+    <ListView fx:id="listView" prefWidth="500"/>
+  </right>
 </BorderPane>

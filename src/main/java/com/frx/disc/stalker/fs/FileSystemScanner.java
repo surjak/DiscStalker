@@ -27,11 +27,11 @@ public class FileSystemScanner {
   /**
    * Recursively traverses the filesystem starting at the given path
    * and builds an object representation of the directory tree.
-   *
+   * <p>
    * Calls {@link #onNewNode} immediately for every new node.
    *
    * @return The root of the built object structure or none
-   *         if the given path doesn't point to a valid directory or file.
+   * if the given path doesn't point to a valid directory or file.
    */
   public Optional<FileSystemNode> scanRecursively(Path path) throws IOException {
     if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {

@@ -23,7 +23,7 @@ public class CustomNotification extends Notification {
     try {
       InputStream resourceAsStream = LocationResolver.getResourceAsStream(imagePath);
       Image image = ImageUtil.getImageImmediate(ImageIO.read(resourceAsStream))
-          .getScaledInstance(48, 48, Image.SCALE_SMOOTH);
+        .getScaledInstance(48, 48, Image.SCALE_SMOOTH);
 
       addImageToNotification(image);
     } catch (Exception e) {

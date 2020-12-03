@@ -53,16 +53,15 @@ public class DirectoryWatcher {
         final var watchedPath = (Path) key.watchable();
 
         for (final var watchEvent : key.pollEvents()) {
-          @SuppressWarnings("unchecked")
-          final var event = (WatchEvent<Path>) watchEvent;
+          @SuppressWarnings("unchecked") final var event = (WatchEvent<Path>) watchEvent;
 
           final var relativeChildPath = event.context();
           final var childPath = watchedPath.resolve(relativeChildPath);
 
           final var directoryWatcherEvent = new DirectoryWatcherEvent(
-              DirectoryWatcherEventType.fromWatchEventKind(event.kind()),
-              watchedPath,
-              childPath
+            DirectoryWatcherEventType.fromWatchEventKind(event.kind()),
+            watchedPath,
+            childPath
           );
           eventSubject.onNext(directoryWatcherEvent);
         }

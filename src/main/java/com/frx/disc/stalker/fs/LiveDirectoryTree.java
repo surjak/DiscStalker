@@ -31,12 +31,12 @@ public class LiveDirectoryTree {
     this.fsScanner = new FileSystemScanner(this::registerNode);
 
     directoryWatcher.getEventSubject()
-            .subscribeOn(Schedulers.io())
-            .observeOn(JavaFxScheduler.platform())
-            .subscribe(this::handleWatcherEvent);
+      .subscribeOn(Schedulers.io())
+      .observeOn(JavaFxScheduler.platform())
+      .subscribe(this::handleWatcherEvent);
 
     this.root = fsScanner.scanRecursively(rootPath)
-        .orElseThrow(() -> new IllegalArgumentException("invalid path"));
+      .orElseThrow(() -> new IllegalArgumentException("invalid path"));
   }
 
   private void registerNode(FileSystemNode node) {
@@ -72,14 +72,14 @@ public class LiveDirectoryTree {
         final var size = Files.size(node.getPath());
         node.getSizeProperty().set(size);
       } catch (IOException e) {
-          //ignore for now
+        //ignore for now
       }
     }
   }
 
   /**
    * Returns the root node of the watched directory tree.
-   *
+   * <p>
    * All the nested nodes are updated whenever a change to the corresponding files occurs.
    */
   public FileSystemNode getRoot() {
