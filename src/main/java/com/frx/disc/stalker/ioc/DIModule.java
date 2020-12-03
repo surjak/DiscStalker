@@ -1,4 +1,4 @@
-package com.frx.disc.stalker.ioC;
+package com.frx.disc.stalker.ioc;
 
 import com.frx.disc.stalker.fs.LiveDirectoryTreeCreator;
 import com.frx.disc.stalker.fs.LiveDirectoryTreeFactory;

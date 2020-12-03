@@ -1,4 +1,4 @@
-package com.frx.disc.stalker.constollers;
+package com.frx.disc.stalker.controller;
 
 import com.frx.disc.stalker.fs.LiveDirectoryTree;
 import com.frx.disc.stalker.model.DirectoryNode;

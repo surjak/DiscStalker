@@ -1,6 +1,6 @@
-import com.frx.disc.stalker.constollers.LiveDirectoryController;
+import com.frx.disc.stalker.controller.LiveDirectoryController;
 import com.frx.disc.stalker.fs.LiveDirectoryTreeFactory;
-import com.frx.disc.stalker.ioC.DIModule;
+import com.frx.disc.stalker.ioc.DIModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import javafx.application.Application;

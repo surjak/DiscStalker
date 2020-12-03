@@ -8,7 +8,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.frx.disc.stalker.constollers.LiveDirectoryController"
+            fx:controller="com.frx.disc.stalker.controller.LiveDirectoryController"
             prefHeight="550.0" prefWidth="850.0"
             minHeight="550.0" minWidth="850.0"
             stylesheets="css/liveDirectoryView.css"
