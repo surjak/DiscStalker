@@ -1,6 +1,6 @@
 package com.frx.discstalker.fs;
 
-import com.frx.discstalker.model.FileSystemNode;
+import com.frx.discstalker.model.IFileSystemNode;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +80,7 @@ class FileSystemScannerTest {
 
     //when
     when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
-    Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+    Optional<IFileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
     //then
     assertTrue(fileSystemNode.get().isDirectory());
@@ -95,7 +95,7 @@ class FileSystemScannerTest {
     when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
     when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(true);
     when(Files.size(path)).thenReturn(5L);
-    Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+    Optional<IFileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
     //then
     assertFalse(fileSystemNode.get().isDirectory());
@@ -109,7 +109,7 @@ class FileSystemScannerTest {
     //when
     when(Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
     when(Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)).thenReturn(false);
-    Optional<FileSystemNode> fileSystemNode = scanner.scanRecursively(path);
+    Optional<IFileSystemNode> fileSystemNode = scanner.scanRecursively(path);
 
     //then
     assertTrue(fileSystemNode.isEmpty());

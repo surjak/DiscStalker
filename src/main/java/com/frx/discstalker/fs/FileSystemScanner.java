@@ -2,7 +2,7 @@ package com.frx.discstalker.fs;
 
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.FileNode;
-import com.frx.discstalker.model.FileSystemNode;
+import com.frx.discstalker.model.IFileSystemNode;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,12 +15,12 @@ import java.util.function.Consumer;
  * A utility for loading directory trees into their object representation.
  */
 public class FileSystemScanner {
-  private final Consumer<FileSystemNode> onNewNode;
+  private final Consumer<IFileSystemNode> onNewNode;
 
   /**
    * @param onNewNode A callback called whenever a new node is scanned.
    */
-  public FileSystemScanner(Consumer<FileSystemNode> onNewNode) {
+  public FileSystemScanner(Consumer<IFileSystemNode> onNewNode) {
     this.onNewNode = onNewNode;
   }
 
@@ -33,7 +33,7 @@ public class FileSystemScanner {
    * @return The root of the built object structure or none
    * if the given path doesn't point to a valid directory or file.
    */
-  public Optional<FileSystemNode> scanRecursively(Path path) throws IOException {
+  public Optional<IFileSystemNode> scanRecursively(Path path) throws IOException {
     if (Files.isDirectory(path, LinkOption.NOFOLLOW_LINKS)) {
       return Optional.of(scanDirectory(path));
     } else if (Files.isRegularFile(path, LinkOption.NOFOLLOW_LINKS)) {

@@ -8,9 +8,9 @@ import javafx.collections.ObservableList;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class DirectoryNode implements FileSystemNode {
+public class DirectoryNode implements IFileSystemNode {
   private final ObjectProperty<Path> pathProperty;
-  private final ObservableList<FileSystemNode> childNodes;
+  private final ObservableList<IFileSystemNode> childNodes;
   private final LongProperty sizeProperty;
   private final LongProperty numberOfFilesProperty;
   private final StringProperty directoryName;
@@ -23,7 +23,7 @@ public class DirectoryNode implements FileSystemNode {
     this.directoryName = new SimpleStringProperty(path.getFileName().toString());
   }
 
-  public void addChild(FileSystemNode child) {
+  public void addChild(IFileSystemNode child) {
     childNodes.add(child);
 
     increaseSizeBy(child.getSize());
@@ -33,7 +33,7 @@ public class DirectoryNode implements FileSystemNode {
     child.getNumberOfFilesProperty().addListener(this::handleChildNumberOfFilesChange);
   }
 
-  public void removeChild(FileSystemNode child) {
+  public void removeChild(IFileSystemNode child) {
     childNodes.remove(child);
 
     increaseSizeBy(-child.getSize());
@@ -59,11 +59,11 @@ public class DirectoryNode implements FileSystemNode {
     numberOfFilesProperty.set(numberOfFilesProperty.get() + diff);
   }
 
-  public ObservableList<FileSystemNode> getChildNodes() {
+  public ObservableList<IFileSystemNode> getChildNodes() {
     return childNodes;
   }
 
-  public Optional<FileSystemNode> getChildByPath(Path path) {
+  public Optional<IFileSystemNode> getChildByPath(Path path) {
     return childNodes.stream()
       .filter(child -> child.getPath().equals(path))
       .findAny();

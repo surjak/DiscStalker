@@ -7,7 +7,7 @@ import javafx.beans.property.StringProperty;
 
 import java.nio.file.Path;
 
-public class FileNode implements FileSystemNode {
+public class FileNode implements IFileSystemNode {
   private final Path path;
   private final LongProperty sizeProperty;
   private final LongProperty numberOfFilesProperty;

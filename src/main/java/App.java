@@ -1,5 +1,5 @@
 import com.frx.discstalker.controller.LiveDirectoryController;
-import com.frx.discstalker.fs.LiveDirectoryTreeFactory;
+import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.ioc.DIModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -25,7 +25,7 @@ public class App extends Application {
     final var path = Paths.get("C:\\Users\\surja\\Downloads\\PIPEv4.3.0\\PIPEv4.3.0\\Pipe\\tmp");
 
     Injector injector = Guice.createInjector(new DIModule());
-    LiveDirectoryTreeFactory liveDirectoryTreeFactory = injector.getInstance(LiveDirectoryTreeFactory.class);
+    ILiveDirectoryTreeFactory liveDirectoryTreeFactory = injector.getInstance(ILiveDirectoryTreeFactory.class);
     final var liveTree = liveDirectoryTreeFactory.createAndRegister(path);
 
     controller.registerDirectoryTree(liveTree);

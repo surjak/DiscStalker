@@ -4,7 +4,7 @@ import com.frx.discstalker.fs.watcher.DirectoryWatcher;
 import com.frx.discstalker.fs.watcher.DirectoryWatcherEvent;
 import com.frx.discstalker.fs.watcher.DirectoryWatcherEventType;
 import com.frx.discstalker.model.DirectoryNode;
-import com.frx.discstalker.model.FileSystemNode;
+import com.frx.discstalker.model.IFileSystemNode;
 import com.google.inject.assistedinject.Assisted;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjava3.subjects.PublishSubject;
@@ -20,7 +20,7 @@ import java.util.Map;
  * and updating it, so that it stays synchronized with the underlying filesystem.
  */
 public class LiveDirectoryTree {
-  private final FileSystemNode root;
+  private final IFileSystemNode root;
   private final DirectoryWatcher directoryWatcher;
   private final Map<Path, DirectoryNode> directoryByPath;
   private final FileSystemScanner fsScanner;
@@ -39,7 +39,7 @@ public class LiveDirectoryTree {
       .orElseThrow(() -> new IllegalArgumentException("invalid path"));
   }
 
-  private void registerNode(FileSystemNode node) {
+  private void registerNode(IFileSystemNode node) {
     if (node.isDirectory()) {
       final var dirNode = (DirectoryNode) node;
 
@@ -66,7 +66,7 @@ public class LiveDirectoryTree {
     }
   }
 
-  private void synchronizeNode(FileSystemNode node) {
+  private void synchronizeNode(IFileSystemNode node) {
     if (!node.isDirectory()) {
       try {
         final var size = Files.size(node.getPath());
@@ -82,7 +82,7 @@ public class LiveDirectoryTree {
    * <p>
    * All the nested nodes are updated whenever a change to the corresponding files occurs.
    */
-  public FileSystemNode getRoot() {
+  public IFileSystemNode getRoot() {
     return root;
   }
 

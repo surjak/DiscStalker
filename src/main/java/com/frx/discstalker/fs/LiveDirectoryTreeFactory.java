@@ -6,6 +6,10 @@ import java.nio.file.Path;
 /**
  * Created by surja on 29.11.2020
  */
-public interface LiveDirectoryTreeFactory {
-  LiveDirectoryTree createAndRegister(Path path) throws IOException;
+public class LiveDirectoryTreeFactory implements ILiveDirectoryTreeFactory {
+
+  @Override
+  public LiveDirectoryTree createAndRegister(Path path) throws IOException {
+    return new LiveDirectoryTree(path);
+  }
 }

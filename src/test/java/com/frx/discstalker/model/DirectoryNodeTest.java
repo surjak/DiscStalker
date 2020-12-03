@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by surja on 02.12.2020
  */
-class FileSystemNodeTest {
+class DirectoryNodeTest {
 
   DirectoryNode directoryNode;
 

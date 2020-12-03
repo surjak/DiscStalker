@@ -2,7 +2,7 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
-import com.frx.discstalker.model.FileSystemNode;
+import com.frx.discstalker.model.IFileSystemNode;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -17,13 +17,13 @@ public class LiveDirectoryController {
   private DirectoryNode root;
 
   @FXML
-  private TreeTableView<FileSystemNode> treeTableView;
+  private TreeTableView<IFileSystemNode> treeTableView;
 
   @FXML
   public void initialize() {
 
-    TreeTableColumn<FileSystemNode, String> pathColumn = new TreeTableColumn<>("Path");
-    TreeTableColumn<FileSystemNode, Long> sizeColumn = new TreeTableColumn<>("Size");
+    TreeTableColumn<IFileSystemNode, String> pathColumn = new TreeTableColumn<>("Path");
+    TreeTableColumn<IFileSystemNode, Long> sizeColumn = new TreeTableColumn<>("Size");
 
     pathColumn.setCellValueFactory(param -> param.getValue().getValue().getNodeNameProperty());
     sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
@@ -46,11 +46,11 @@ public class LiveDirectoryController {
   }
 
 
-  private void fillTreeTable(TreeItem treeItem, FileSystemNode systemNode) {
+  private void fillTreeTable(TreeItem treeItem, IFileSystemNode systemNode) {
     if (systemNode.isDirectory()) {
       DirectoryNode directoryNode = (DirectoryNode) systemNode;
       fillSubTree(treeItem, directoryNode);
-      directoryNode.getChildNodes().addListener((ListChangeListener<FileSystemNode>) change -> {
+      directoryNode.getChildNodes().addListener((ListChangeListener<IFileSystemNode>) change -> {
         while (change.next()) {
           if (change.wasAdded()) {
             handleCreateChange(treeItem, change);
@@ -72,7 +72,7 @@ public class LiveDirectoryController {
     });
   }
 
-  private void handleCreateChange(TreeItem treeItem, ListChangeListener.Change<? extends FileSystemNode> change) {
+  private void handleCreateChange(TreeItem treeItem, ListChangeListener.Change<? extends IFileSystemNode> change) {
     change.getAddedSubList().forEach(node -> {
       TreeItem subTree = new TreeItem(node);
       treeItem.getChildren().add(subTree);
@@ -80,9 +80,9 @@ public class LiveDirectoryController {
     });
   }
 
-  private void handleRemoveChange(TreeItem treeItem, ListChangeListener.Change<? extends FileSystemNode> change) {
+  private void handleRemoveChange(TreeItem treeItem, ListChangeListener.Change<? extends IFileSystemNode> change) {
     change.getRemoved().forEach(node -> {
-      final List<TreeItem<FileSystemNode>> itemsToRemove = new ArrayList<>();
+      final List<TreeItem<IFileSystemNode>> itemsToRemove = new ArrayList<>();
 
       for (Object child : treeItem.getChildren()) {
         TreeItem treeItem1 = (TreeItem) child;
