@@ -1,5 +1,3 @@
-import com.frx.discstalker.controller.LiveDirectoryController;
-import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.ioc.DIModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -9,40 +7,37 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import java.nio.file.Paths;
+import java.io.IOException;
 
 public class App extends Application {
+  public static void main(String[] args) {
+    App.launch(args);
+  }
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    var loader = new FXMLLoader();
-    BorderPane borderPane = loadMainView(loader, primaryStage);
-    LiveDirectoryController controller = loader.getController();
+    final var injector = Guice.createInjector(new DIModule());
+
+    final var borderPane = loadMainView(injector);
     configureStage(primaryStage, borderPane);
-    primaryStage.show();
-
-    final var path = Paths.get("C:\\Users\\surja\\Downloads\\PIPEv4.3.0\\PIPEv4.3.0\\Pipe\\tmp");
-
-    Injector injector = Guice.createInjector(new DIModule());
-    ILiveDirectoryTreeFactory liveDirectoryTreeFactory = injector.getInstance(ILiveDirectoryTreeFactory.class);
-    final var liveTree = liveDirectoryTreeFactory.createAndRegister(path);
-
-    controller.registerDirectoryTree(liveTree);
-    primaryStage.setOnCloseRequest(t -> {
+    primaryStage.setOnCloseRequest(event -> {
       Platform.exit();
       System.exit(0);
     });
 
+    borderPane.requestFocus();
+    primaryStage.show();
   }
 
-  private BorderPane loadMainView(FXMLLoader loader, Stage primaryStage) throws java.io.IOException {
-    loader.setLocation(getClass().getResource("view/liveDirectoryView.fxml"));
-    return loader.load();
+  private BorderPane loadMainView(Injector injector) throws IOException {
+    final var fxmlLoader = new FXMLLoader();
+    fxmlLoader.setControllerFactory(injector::getInstance);
+    fxmlLoader.setLocation(getClass().getResource("view/liveDirectoryView.fxml"));
+    return fxmlLoader.load();
   }
 
   private void configureStage(Stage primaryStage, BorderPane rootLayout) {
-    var scene = new Scene(rootLayout);
+    final var scene = new Scene(rootLayout);
     primaryStage.setScene(scene);
     primaryStage.setTitle("Disc Stalker");
     primaryStage.minWidthProperty().bind(rootLayout.minWidthProperty());

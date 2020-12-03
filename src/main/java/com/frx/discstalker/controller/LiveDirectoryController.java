@@ -1,98 +1,82 @@
 package com.frx.discstalker.controller;
 
+import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
-import javafx.collections.ListChangeListener;
+import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import io.reactivex.rxjavafx.sources.Flag;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
-import java.util.*;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Created by surja on 29.11.2020
  */
 public class LiveDirectoryController {
-
-  private DirectoryNode root;
+  @Inject
+  private ILiveDirectoryTreeFactory liveDirectoryTreeFactory;
 
   @FXML
   private TreeTableView<IFileSystemNode> treeTableView;
 
   @FXML
   public void initialize() {
-
-    TreeTableColumn<IFileSystemNode, String> pathColumn = new TreeTableColumn<>("Path");
-    TreeTableColumn<IFileSystemNode, Long> sizeColumn = new TreeTableColumn<>("Size");
-
-    pathColumn.setCellValueFactory(param -> param.getValue().getValue().getNodeNameProperty());
-    sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
-    pathColumn.setEditable(true);
-    sizeColumn.setEditable(true);
     treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
-    treeTableView.setEditable(true);
+
+    final var pathColumn = new TreeTableColumn<IFileSystemNode, String>("Path");
+    pathColumn.setCellValueFactory(param -> param.getValue().getValue().getNodeNameProperty());
     treeTableView.getColumns().add(pathColumn);
+
+    final var sizeColumn = new TreeTableColumn<IFileSystemNode, Long>("Size");
+    sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
     treeTableView.getColumns().add(sizeColumn);
 
-
+    try {
+      // TODO: make this selectable from the UI
+      final var path = Paths.get("/home/jonatanklosko/stuff/tmp/to");
+      final var liveTree = liveDirectoryTreeFactory.createAndRegister(path);
+      renderLiveTree(liveTree);
+    } catch (IOException ex) { /* this is temporary anyway */ }
   }
 
-  public void registerDirectoryTree(LiveDirectoryTree directoryTree) {
-    this.root = (DirectoryNode) directoryTree.getRoot();
-
-    TreeItem rootItem = new TreeItem(root);
-    fillTreeTable(rootItem, root);
+  public void renderLiveTree(LiveDirectoryTree liveDirectoryTree) {
+    final var root = (DirectoryNode) liveDirectoryTree.getRoot();
+    final var rootItem = new TreeItem<IFileSystemNode>(root);
+    fillTree(rootItem, root);
     treeTableView.setRoot(rootItem);
+    rootItem.setExpanded(true);
   }
 
+  private void fillTree(TreeItem<IFileSystemNode> treeItem, IFileSystemNode node) {
+    if (node.isDirectory()) {
+      final var directoryNode = (DirectoryNode) node;
 
-  private void fillTreeTable(TreeItem treeItem, IFileSystemNode systemNode) {
-    if (systemNode.isDirectory()) {
-      DirectoryNode directoryNode = (DirectoryNode) systemNode;
-      fillSubTree(treeItem, directoryNode);
-      directoryNode.getChildNodes().addListener((ListChangeListener<IFileSystemNode>) change -> {
-        while (change.next()) {
-          if (change.wasAdded()) {
-            handleCreateChange(treeItem, change);
-          }
-          if (change.wasRemoved()) {
-            handleRemoveChange(treeItem, change);
-          }
-        }
+      directoryNode.getChildNodes().forEach(child -> {
+        addNodeToTree(treeItem, child);
       });
+
+      JavaFxObservable.changesOf(directoryNode.getChildNodes())
+        .subscribe(event -> {
+          if (event.getFlag() == Flag.ADDED) {
+            addNodeToTree(treeItem, event.getValue());
+          } else if (event.getFlag() == Flag.REMOVED) {
+            removeNodeFromTree(treeItem, event.getValue());
+          }
+        });
     }
   }
 
-  private void fillSubTree(TreeItem treeItem, DirectoryNode directoryNode) {
-    directoryNode.getChildNodes().forEach(child -> {
-      TreeItem subTree = new TreeItem(child);
-
-      treeItem.getChildren().add(subTree);
-      fillTreeTable(subTree, child);
-    });
+  private void addNodeToTree(TreeItem<IFileSystemNode> parentTreeItem, IFileSystemNode node) {
+    final var childTreeItem = new TreeItem<>(node);
+    parentTreeItem.getChildren().add(childTreeItem);
+    fillTree(childTreeItem, node);
   }
 
-  private void handleCreateChange(TreeItem treeItem, ListChangeListener.Change<? extends IFileSystemNode> change) {
-    change.getAddedSubList().forEach(node -> {
-      TreeItem subTree = new TreeItem(node);
-      treeItem.getChildren().add(subTree);
-      fillTreeTable(subTree, node);
-    });
+  private void removeNodeFromTree(TreeItem<IFileSystemNode> parentTreeItem, IFileSystemNode node) {
+    parentTreeItem.getChildren().removeIf(childTreeItem -> childTreeItem.getValue().equals(node));
   }
-
-  private void handleRemoveChange(TreeItem treeItem, ListChangeListener.Change<? extends IFileSystemNode> change) {
-    change.getRemoved().forEach(node -> {
-      final List<TreeItem<IFileSystemNode>> itemsToRemove = new ArrayList<>();
-
-      for (Object child : treeItem.getChildren()) {
-        TreeItem treeItem1 = (TreeItem) child;
-        if (treeItem1.getValue().equals(node)) {
-          itemsToRemove.add(treeItem1);
-        }
-      }
-
-      treeItem.getChildren().removeAll(itemsToRemove);
-    });
-  }
-
 }
