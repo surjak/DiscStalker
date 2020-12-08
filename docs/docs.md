@@ -28,6 +28,8 @@ tak aby wyświetlane informacje przez cały czas działania programu odzwiercied
 
 ## 2. Model danych
 
+![](./img/model_uml.png)
+
 Dane należące do dziedziny aplikacji to pliki przechowywane na dysku,
 natomiast swojego rodzaju bazę danych stanowi w tym przypadku system plików.
 Powszechnie stosowaną logiczną organizacją systemu plików jest struktura drzewiasta,
@@ -65,6 +67,8 @@ do którego nie można dołączyć kolejnych węzłów.
 Atrybuty `FileNode` odpowiadają bezpośrednio obiektowi systemu plików.
 
 ## 3. Integracja modelu ze źródłem danych
+
+![](./img/fs_uml.png)
 
 Zgodnie z założeniem projektowym dane w aplikacji powinny być w efektywny sposób
 synchronizowane z rzeczywistym systemem plików. Problem ten można zdekomponować
@@ -107,6 +111,8 @@ W odpowiedzi na zdarzenia modyfikacji systemu plików (pochodzące z `DirectoryW
 reprezentacja obiektowa jest stosownie modyfikowana, w celu odzwierciedlenia tych zmian.
 
 ## 4. Interfejs użytkownika
+
+![](./img/mvc.png)
 
 Aplikacja posiada graficzny interfejs, którego głównym zadaniem jest wyświetlanie
 wskazanego drzewa katalogów oraz jego aktualizowanie.
