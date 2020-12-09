@@ -2,14 +2,17 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.ioc.DIModule;
 import com.google.inject.Guice;
-import com.google.inject.Inject;
-import com.google.inject.Injector;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -17,28 +20,24 @@ import java.io.IOException;
  */
 public class DirectoryTabsController {
 
-  private final static String lab1 = "/Users/nazkord/AGH/5_semestr/TO/Lab1";
-  private final static String lab2 = "/Users/nazkord/AGH/5_semestr/TO/Lab2";
-  private final static String lab3 = "/Users/nazkord/AGH/5_semestr/TO/Lab3";
-  private final static String directoryView = "view/directoryTabs.fxml";
+  private final static String DIRECTORY_VIEW_FXML = "/view/liveDirectoryView.fxml";
+
   @FXML
   TabPane directoriesTabPane;
+
+  @FXML
+  Button addButton;
 
   @FXML
   public void initialize() throws IOException {
     FXMLLoader fxmlLoader = new FXMLLoader();
     final var injector = Guice.createInjector(new DIModule());
     fxmlLoader.setControllerFactory(injector::getInstance);
-    fxmlLoader.setLocation(getClass().getResource("/view/liveDirectoryView.fxml"));
+    fxmlLoader.setLocation(getClass().getResource(DIRECTORY_VIEW_FXML));
     Node tabNode = fxmlLoader.load();
     LiveDirectoryController controller = fxmlLoader.getController();
 
-    directoriesTabPane.getTabs().add(new Tab(lab1));
-    directoriesTabPane.getTabs().add(new Tab(lab2));
-    directoriesTabPane.getTabs().add(new Tab(lab3));
-
     directoriesTabPane.getSelectionModel().clearSelection();
-
     // Add Tab ChangeListener
     directoriesTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
       System.out.println("Tab selected: " + newTab.getText());
@@ -55,8 +54,18 @@ public class DirectoryTabsController {
       }
 
     });
-    // By default, select 1st tab and load its content.
-    directoriesTabPane.getSelectionModel().selectFirst();
+  }
 
+  @FXML
+  private void handleAddAction(ActionEvent event) {
+    DirectoryChooser chooser = new DirectoryChooser();
+    chooser.setTitle("Open File");
+    chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    File file = chooser.showDialog(new Stage());
+    if (file != null) {
+      String fileAsString = file.toString();
+      directoriesTabPane.getTabs().add(new Tab(fileAsString));
+      directoriesTabPane.getSelectionModel().selectLast();
+    }
   }
 }
