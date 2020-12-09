@@ -36,7 +36,7 @@ public class LiveDirectoryTree {
       .subscribe(this::handleWatcherEvent);
 
     this.root = fsScanner.scanRecursively(rootPath)
-      .orElseThrow(() -> new IllegalArgumentException("invalid path"));
+      .orElseThrow(() -> new IllegalArgumentException("invalid path: " + rootPath));
   }
 
   private void registerNode(IFileSystemNode node) {
