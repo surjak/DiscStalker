@@ -17,22 +17,19 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    final var injector = Guice.createInjector(new DIModule());
-
-    final var borderPane = loadMainView(injector);
-    configureStage(primaryStage, borderPane);
+    final var tabPane = loadMainView();
+    configureStage(primaryStage, tabPane);
     primaryStage.setOnCloseRequest(event -> {
       Platform.exit();
       System.exit(0);
     });
 
-    borderPane.requestFocus();
+    tabPane.requestFocus();
     primaryStage.show();
   }
 
-  private TabPane loadMainView(Injector injector) throws IOException {
+  private TabPane loadMainView() throws IOException {
     final var fxmlLoader = new FXMLLoader();
-//    fxmlLoader.setControllerFactory(injector::getInstance);
     fxmlLoader.setLocation(getClass().getResource("view/directoryTabs.fxml"));
     return fxmlLoader.load();
   }

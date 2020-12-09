@@ -1,5 +1,7 @@
 package com.frx.discstalker.controller;
 
+import com.frx.discstalker.ioc.DIModule;
+import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import javafx.fxml.FXML;
@@ -19,17 +21,13 @@ public class DirectoryTabsController {
   private final static String lab2 = "/Users/nazkord/AGH/5_semestr/TO/Lab2";
   private final static String lab3 = "/Users/nazkord/AGH/5_semestr/TO/Lab3";
   private final static String directoryView = "view/directoryTabs.fxml";
-  // The FXMLLoader
-  private final FXMLLoader fxmlLoader = new FXMLLoader();
   @FXML
   TabPane directoriesTabPane;
 
-  @Inject
-  private Injector injector;
-
   @FXML
   public void initialize() throws IOException {
-
+    FXMLLoader fxmlLoader = new FXMLLoader();
+    final var injector = Guice.createInjector(new DIModule());
     fxmlLoader.setControllerFactory(injector::getInstance);
     fxmlLoader.setLocation(getClass().getResource("/view/liveDirectoryView.fxml"));
     Node tabNode = fxmlLoader.load();

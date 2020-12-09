@@ -41,12 +41,6 @@ public class LiveDirectoryController {
     final var sizeColumn = new TreeTableColumn<IFileSystemNode, Long>("Size");
     sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
     treeTableView.getColumns().add(sizeColumn);
-
-//    try {
-////       TODO: make this selectable from the UI
-//      final var liveTree = liveDirectoryTreeFactory.createAndRegister(path);
-//      renderLiveTree(liveTree);
-//    } catch (IOException ex) { /* this is temporary anyway */ }
   }
 
   public void renderLiveTree() throws IOException {
