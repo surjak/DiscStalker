@@ -2,6 +2,8 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.ioc.DIModule;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,19 +42,19 @@ public class DirectoryTabsController {
     directoriesTabPane.getSelectionModel().clearSelection();
     // Add Tab ChangeListener
     directoriesTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-      System.out.println("Tab selected: " + newTab.getText());
       if (oldTab != null) {
         oldTab.setContent(null);
       }
-      newTab.setContent(tabNode);
+      if (newTab != null) {
+        newTab.setContent(tabNode);
 
-      controller.setPath(newTab.getText());
-      try {
-        controller.renderLiveTree();
-      } catch (IOException e) {
-        e.printStackTrace();
+        controller.setPath(newTab.getText());
+        try {
+          controller.renderLiveTree();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
       }
-
     });
   }
 

@@ -1,3 +1,5 @@
+import com.frx.discstalker.ioc.DIModule;
+import com.google.inject.Guice;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -14,14 +16,14 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    final var tabPane = loadMainView();
-    configureStage(primaryStage, tabPane);
+    final var pane = loadMainView();
+    configureStage(primaryStage, pane);
     primaryStage.setOnCloseRequest(event -> {
       Platform.exit();
       System.exit(0);
     });
 
-    tabPane.requestFocus();
+    pane.requestFocus();
     primaryStage.show();
   }
 
