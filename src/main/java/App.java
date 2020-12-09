@@ -5,6 +5,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -29,14 +30,14 @@ public class App extends Application {
     primaryStage.show();
   }
 
-  private BorderPane loadMainView(Injector injector) throws IOException {
+  private TabPane loadMainView(Injector injector) throws IOException {
     final var fxmlLoader = new FXMLLoader();
-    fxmlLoader.setControllerFactory(injector::getInstance);
-    fxmlLoader.setLocation(getClass().getResource("view/liveDirectoryView.fxml"));
+//    fxmlLoader.setControllerFactory(injector::getInstance);
+    fxmlLoader.setLocation(getClass().getResource("view/directoryTabs.fxml"));
     return fxmlLoader.load();
   }
 
-  private void configureStage(Stage primaryStage, BorderPane rootLayout) {
+  private void configureStage(Stage primaryStage, TabPane rootLayout) {
     final var scene = new Scene(rootLayout);
     primaryStage.setScene(scene);
     primaryStage.setTitle("Disc Stalker");
