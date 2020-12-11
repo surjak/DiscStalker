@@ -1,5 +1,6 @@
 import com.frx.discstalker.ioc.DIModule;
 import com.google.inject.Guice;
+import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +17,8 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    final var pane = loadMainView();
+    Injector injector = Guice.createInjector(new DIModule());
+    final var pane = loadMainView(injector);
     configureStage(primaryStage, pane);
     primaryStage.setOnCloseRequest(event -> {
       Platform.exit();
@@ -27,8 +29,9 @@ public class App extends Application {
     primaryStage.show();
   }
 
-  private AnchorPane loadMainView() throws IOException {
+  private AnchorPane loadMainView(Injector injector) throws IOException {
     final var fxmlLoader = new FXMLLoader();
+    fxmlLoader.setControllerFactory(injector::getInstance);
     fxmlLoader.setLocation(getClass().getResource("view/directoryTabs.fxml"));
     return fxmlLoader.load();
   }
