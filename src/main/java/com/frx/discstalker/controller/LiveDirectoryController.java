@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -23,6 +24,12 @@ public class LiveDirectoryController {
   @FXML
   private TreeTableView<IFileSystemNode> treeTableView;
 
+  private Path path;
+
+  public void setPath(String path) {
+    this.path = Paths.get(path);
+  }
+
   @FXML
   public void initialize() {
     treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
@@ -34,16 +41,10 @@ public class LiveDirectoryController {
     final var sizeColumn = new TreeTableColumn<IFileSystemNode, Long>("Size");
     sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
     treeTableView.getColumns().add(sizeColumn);
-
-    try {
-      // TODO: make this selectable from the UI
-      final var path = Paths.get("/home/jonatanklosko/stuff/tmp/to");
-      final var liveTree = liveDirectoryTreeFactory.createAndRegister(path);
-      renderLiveTree(liveTree);
-    } catch (IOException ex) { /* this is temporary anyway */ }
   }
 
-  public void renderLiveTree(LiveDirectoryTree liveDirectoryTree) {
+  public void renderLiveTree() throws IOException {
+    final var liveDirectoryTree = liveDirectoryTreeFactory.createAndRegister(path);
     final var root = (DirectoryNode) liveDirectoryTree.getRoot();
     final var rootItem = new TreeItem<IFileSystemNode>(root);
     fillTree(rootItem, root);

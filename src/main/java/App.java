@@ -5,8 +5,9 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class App extends Application {
@@ -16,27 +17,26 @@ public class App extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception {
-    final var injector = Guice.createInjector(new DIModule());
-
-    final var borderPane = loadMainView(injector);
-    configureStage(primaryStage, borderPane);
+    Injector injector = Guice.createInjector(new DIModule());
+    final var pane = loadMainView(injector);
+    configureStage(primaryStage, pane);
     primaryStage.setOnCloseRequest(event -> {
       Platform.exit();
       System.exit(0);
     });
 
-    borderPane.requestFocus();
+    pane.requestFocus();
     primaryStage.show();
   }
 
-  private BorderPane loadMainView(Injector injector) throws IOException {
+  private AnchorPane loadMainView(Injector injector) throws IOException {
     final var fxmlLoader = new FXMLLoader();
     fxmlLoader.setControllerFactory(injector::getInstance);
-    fxmlLoader.setLocation(getClass().getResource("view/liveDirectoryView.fxml"));
+    fxmlLoader.setLocation(getClass().getResource("view/directoryTabs.fxml"));
     return fxmlLoader.load();
   }
 
-  private void configureStage(Stage primaryStage, BorderPane rootLayout) {
+  private void configureStage(Stage primaryStage, AnchorPane rootLayout) {
     final var scene = new Scene(rootLayout);
     primaryStage.setScene(scene);
     primaryStage.setTitle("Disc Stalker");
