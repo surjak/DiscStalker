@@ -30,18 +30,17 @@ public class DirectoryTabsController {
   @FXML
   Button addButton;
 
-  private final Injector injector;
   private final ViewLoader viewLoader;
 
   @Inject
-  public DirectoryTabsController(Injector injector, ViewLoader viewLoader) {
-    this.injector = injector;
+  public DirectoryTabsController(ViewLoader viewLoader) {
     this.viewLoader = viewLoader;
   }
 
   @FXML
   private void handleAddAction(ActionEvent event) {
-    Optional<File> file = chooseDirectoryFromFS();
+//    Optional<File> file = chooseDirectoryFromFS();
+    Optional<File> file = Optional.of(new File("C:\\Users\\surja\\Documents\\Programowanie\\Java\\DiscStalker\\src\\test\\resources\\dirB"));
     file.ifPresent(this::createAndDisplayNewTabWithLiveDirectoryTree);
   }
 

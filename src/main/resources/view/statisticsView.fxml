@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane
+  xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="com.frx.discstalker.controller.StatisticsController"
+  prefHeight="550.0" prefWidth="300.0"
+  minHeight="550.0" minWidth="300.0"
+>
+  <top>
+  <VBox spacing="20">
+    <children>
+      <TableView fx:id="tableView" maxHeight="200.0" maxWidth="300.0"></TableView>
+    </children>
+  </VBox>
+  </top>
+</BorderPane>
