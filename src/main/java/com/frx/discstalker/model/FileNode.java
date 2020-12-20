@@ -63,14 +63,13 @@ public class FileNode implements IFileSystemNode {
     return numberOfFilesProperty.get();
   }
 
-  public void setFileExtension() {
+  private void setFileExtension() {
     Tika tika = new Tika();
     Try.of(() -> tika.detect(path.toFile()))
       .onSuccess(mimeType -> this.mimeType = mimeType)
       .onFailure(throwable -> this.mimeType = "");
 
     fileName.addListener((observable, oldValue, newValue) -> setFileExtension());
-    sizeProperty.addListener((observable, oldValue, newValue) -> setFileExtension());
   }
 
 }

@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class FileStatisticsCalculator implements StatisticCalculator {
 
-  ImmutableList<FilesStatistic> byTypeStatistics = ImmutableList.of(new FileSize(), new NumberOfFiles());
+  ImmutableList<FilesStatistic> byTypeStatistics = ImmutableList.of(new FileSize(), new NumberOfFiles(), new NLargestFiles());
 
   @Override
   public void calculate(IFileSystemNode root) {
