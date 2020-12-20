@@ -1,7 +1,8 @@
-package com.frx.discstalker.stats;
+package com.frx.discstalker.statistics;
 
 import com.frx.discstalker.fs.LiveDirectoryTree;
-import com.frx.discstalker.stats.filesByTypeStatistics.ByTypeCalculator;
+import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.FileStatisticsCalculator;
+import com.frx.discstalker.statistics.concreteStatistics.StatisticCalculator;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.collections.FXCollections;
@@ -20,7 +21,7 @@ public class StatisticsProvider {
   public StatisticsProvider(LiveDirectoryTree directoryTree) {
     this.directoryTree = directoryTree;
 
-    registerCalculator(new ByTypeCalculator());
+    registerCalculator(new FileStatisticsCalculator());
 
     fillStatisticsList();
     calculateStatistics();

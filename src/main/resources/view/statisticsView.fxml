@@ -13,7 +13,7 @@
   <top>
   <VBox spacing="20">
     <children>
-      <TableView fx:id="tableView" maxHeight="200.0" maxWidth="300.0"></TableView>
+      <TableView fx:id="tableView" maxWidth="300.0"></TableView>
     </children>
   </VBox>
   </top>

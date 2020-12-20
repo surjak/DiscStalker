@@ -1,6 +1,7 @@
-package com.frx.discstalker.stats;
+package com.frx.discstalker.statistics.concreteStatistics;
 
 import com.frx.discstalker.model.IFileSystemNode;
+import com.frx.discstalker.statistics.Statistic;
 
 import java.util.*;
 

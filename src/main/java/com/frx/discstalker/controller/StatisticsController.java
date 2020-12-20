@@ -1,7 +1,7 @@
 package com.frx.discstalker.controller;
 
-import com.frx.discstalker.stats.StatisticsProvider;
-import com.frx.discstalker.stats.Statistic;
+import com.frx.discstalker.statistics.StatisticsProvider;
+import com.frx.discstalker.statistics.Statistic;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;

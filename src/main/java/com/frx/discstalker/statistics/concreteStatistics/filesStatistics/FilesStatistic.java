@@ -1,14 +1,13 @@
-package com.frx.discstalker.stats.filesByTypeStatistics;
+package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.FileNode;
-import com.frx.discstalker.stats.Statistic;
+import com.frx.discstalker.statistics.Statistic;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by surjak on 19.12.2020
  */
-public interface StatisticByType extends Statistic {
+public interface FilesStatistic extends Statistic {
   void calculateValue(List<FileNode> fileSystemNodes);
 }

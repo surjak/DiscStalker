@@ -1,4 +1,4 @@
-package com.frx.discstalker.stats.filesByTypeStatistics;
+package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.FileNode;
 
@@ -10,11 +10,11 @@ import static java.util.stream.Collectors.*;
 /**
  * Created by surjak on 19.12.2020
  */
-public class NumberOfFilesByType extends BaseByTypeStatistic {
+public class NumberOfFiles extends BaseFilesStatistic {
 
   private static final String STATISTIC_NAME = "Number of files grouped by file type";
 
-  public NumberOfFilesByType() {
+  public NumberOfFiles() {
     super(STATISTIC_NAME);
   }
 

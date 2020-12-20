@@ -1,6 +1,5 @@
-package com.frx.discstalker.stats;
+package com.frx.discstalker.statistics;
 
-import javafx.beans.property.LongProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 

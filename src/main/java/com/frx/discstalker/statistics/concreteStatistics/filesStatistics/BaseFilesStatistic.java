@@ -1,4 +1,4 @@
-package com.frx.discstalker.stats.filesByTypeStatistics;
+package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -8,11 +8,11 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by surjak on 19.12.2020
  */
-public abstract class BaseByTypeStatistic implements StatisticByType {
+public abstract class BaseFilesStatistic implements FilesStatistic {
   private final String STATISTIC_NAME;
   private SimpleObjectProperty content;
 
-  public BaseByTypeStatistic(String statisticName) {
+  public BaseFilesStatistic(String statisticName) {
     this.content = new SimpleObjectProperty("");
     this.STATISTIC_NAME = statisticName;
   }

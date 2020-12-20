@@ -4,7 +4,7 @@ import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
-import com.frx.discstalker.stats.StatisticsProvider;
+import com.frx.discstalker.statistics.StatisticsProvider;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
 import javafx.fxml.FXML;

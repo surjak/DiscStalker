@@ -1,7 +1,6 @@
-package com.frx.discstalker.stats.filesByTypeStatistics;
+package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.FileNode;
-import javafx.beans.property.*;
 
 import java.util.List;
 import java.util.Map;
@@ -12,11 +11,11 @@ import static java.util.stream.Collectors.summingLong;
 /**
  * Created by surjak on 19.12.2020
  */
-public class FileSizeByType extends BaseByTypeStatistic {
+public class FileSize extends BaseFilesStatistic {
 
   private static final String STATISTIC_NAME = "File size grouped by file type";
 
-  public FileSizeByType() {
+  public FileSize() {
     super(STATISTIC_NAME);
   }
 

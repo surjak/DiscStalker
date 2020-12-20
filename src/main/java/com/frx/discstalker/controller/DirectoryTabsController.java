@@ -2,7 +2,6 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.view.ViewLoader;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

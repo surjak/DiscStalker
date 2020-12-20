@@ -1,22 +1,20 @@
-package com.frx.discstalker.stats.filesByTypeStatistics;
+package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.FileNode;
 import com.frx.discstalker.model.IFileSystemNode;
-import com.frx.discstalker.stats.Statistic;
-import com.frx.discstalker.stats.StatisticCalculator;
+import com.frx.discstalker.statistics.Statistic;
+import com.frx.discstalker.statistics.concreteStatistics.StatisticCalculator;
+import com.google.common.collect.ImmutableList;
 
 import java.util.*;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingLong;
 
 /**
  * Created by surjak on 19.12.2020
  */
-public class ByTypeCalculator implements StatisticCalculator {
+public class FileStatisticsCalculator implements StatisticCalculator {
 
-  List<StatisticByType> byTypeStatistics = List.of(new FileSizeByType(), new NumberOfFilesByType());
+  ImmutableList<FilesStatistic> byTypeStatistics = ImmutableList.of(new FileSize(), new NumberOfFiles());
 
   @Override
   public void calculate(IFileSystemNode root) {
