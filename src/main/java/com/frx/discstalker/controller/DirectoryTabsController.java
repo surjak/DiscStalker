@@ -38,8 +38,7 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleAddAction(ActionEvent event) {
-//    Optional<File> file = chooseDirectoryFromFS();
-    Optional<File> file = Optional.of(new File("C:\\Users\\surja\\Documents\\Programowanie\\Java\\DiscStalker\\src\\test\\resources\\dirB"));
+    Optional<File> file = chooseDirectoryFromFS();
     file.ifPresent(this::createAndDisplayNewTabWithLiveDirectoryTree);
   }
 

@@ -14,7 +14,7 @@ import java.util.*;
  */
 public class FileStatisticsCalculator implements StatisticCalculator {
 
-  ImmutableList<FilesStatistic> byTypeStatistics = ImmutableList.of(new FileSize(), new NumberOfFiles(), new NLargestFiles());
+  private final ImmutableList<FilesStatistic> filesStatistics = ImmutableList.of(new FileSize(), new NumberOfFiles(), new NLargestFiles());
 
   @Override
   public void calculate(IFileSystemNode root) {
@@ -22,7 +22,7 @@ public class FileStatisticsCalculator implements StatisticCalculator {
     List<FileNode> fileSystemNodes = new ArrayList<>();
     fillListWithAllFilesInTree(fileSystemNodes, root);
 
-    byTypeStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes));
+    filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes));
   }
 
   private void fillListWithAllFilesInTree(List<FileNode> fileSystemNodes, IFileSystemNode root) {
@@ -43,6 +43,6 @@ public class FileStatisticsCalculator implements StatisticCalculator {
 
   @Override
   public List<? extends Statistic> getStatistics() {
-    return byTypeStatistics;
+    return filesStatistics;
   }
 }

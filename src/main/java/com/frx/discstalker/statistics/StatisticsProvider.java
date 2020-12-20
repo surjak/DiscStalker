@@ -1,9 +1,9 @@
 package com.frx.discstalker.statistics;
 
 import com.frx.discstalker.fs.LiveDirectoryTree;
+import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
 import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.FileStatisticsCalculator;
 import com.frx.discstalker.statistics.concreteStatistics.StatisticCalculator;
-import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
@@ -25,10 +25,19 @@ public class StatisticsProvider {
     this.directoryTree = directoryTree;
 
     registerCalculator(new FileStatisticsCalculator());
+    registerCalculator(new DirectoryStatisticsCalculator());
 
     fillStatisticsList();
     calculateStatistics();
 
+    bufferEventsFor5SecondsAndRecalculateStatsIfEventOccurred(directoryTree);
+  }
+
+  public ObservableList<Statistic> getStatisticList() {
+    return statisticList;
+  }
+
+  private void bufferEventsFor5SecondsAndRecalculateStatsIfEventOccurred(LiveDirectoryTree directoryTree) {
     directoryTree.getEventSubject()
       .toFlowable(BackpressureStrategy.LATEST)
       .buffer(5, TimeUnit.SECONDS)
@@ -36,10 +45,6 @@ public class StatisticsProvider {
       .subscribeOn(Schedulers.io())
       .observeOn(JavaFxScheduler.platform())
       .subscribe(directoryWatcherEvent -> calculateStatistics());
-  }
-
-  public ObservableList<Statistic> getStatisticList() {
-    return statisticList;
   }
 
   private void registerCalculator(StatisticCalculator statisticCalculator) {
