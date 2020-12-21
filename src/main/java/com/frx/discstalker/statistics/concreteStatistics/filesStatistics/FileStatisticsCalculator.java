@@ -33,7 +33,13 @@ public class FileStatisticsCalculator implements StatisticCalculator {
   }
 
   private void calculateStatistics(List<FileNode> fileSystemNodes) {
-    filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes));
+    Observable.fromIterable(fileSystemNodes)
+      .filter(fileNode -> null == fileNode.getMimeType()) //set extension to new files
+      .subscribeOn(Schedulers.io())
+      .observeOn(JavaFxScheduler.platform())
+      .doOnNext(FileNode::setFileExtension)
+      .doOnComplete(() -> filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes)))
+      .subscribe();
   }
 
   private void setFileExtensionAsPartOfFirstCalculation(List<FileNode> fileSystemNodes) {

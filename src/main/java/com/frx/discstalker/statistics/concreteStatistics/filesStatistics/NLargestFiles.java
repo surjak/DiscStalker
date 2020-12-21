@@ -27,7 +27,7 @@ public class NLargestFiles extends BaseFilesStatistic {
     Map<String, Long> statisticByType = fileSystemNodes.stream()
       .sorted(Comparator.comparingLong(FileNode::getSize).reversed())
       .limit(N)
-      .collect(Collectors.toMap(fileNode -> fileNode.getNodeNameProperty().getValue(), FileNode::getSize));
+      .collect(Collectors.toMap(fileNode -> fileNode.getPath().toString(), FileNode::getSize));
 
     writeIntoValue(statisticByType);
   }
