@@ -13,7 +13,7 @@
   styleClass="main-pane"
 >
   <left>
-    <TreeTableView fx:id="treeTableView" prefWidth="500"/>
+    <TreeTableView fx:id="treeTableView" prefWidth="400"/>
   </left>
   <right>
     <fx:include source="statisticsView.fxml" fx:id="statistics"></fx:include>
