@@ -15,6 +15,7 @@ public class ViewUtils {
       suffix = chars.next();
     }
 
-    return String.format("%.1f %s", bytes / 1000.0, suffix);
+    String formattedValue = String.format("%.1f %s", bytes / 1000.0, suffix);
+    return formattedValue.replace(",", ".");
   }
 }
