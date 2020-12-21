@@ -2,9 +2,12 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.statistics.StatisticsProvider;
 import com.frx.discstalker.statistics.Statistic;
+import com.frx.discstalker.view.ViewUtils;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
+import javafx.util.Callback;
 
 import java.util.Objects;
 
@@ -27,6 +30,7 @@ public class StatisticsController {
 
     statDescription.setCellValueFactory(param -> param.getValue().getName());
     statValue.setCellValueFactory(param -> param.getValue().getValue());
+    statValue.setCellFactory(ViewUtils.wrapTextInCellFactory());
 
     tableView.getColumns().addAll(statDescription, statValue);
 

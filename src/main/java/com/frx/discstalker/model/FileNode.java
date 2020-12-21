@@ -21,7 +21,6 @@ public class FileNode implements IFileSystemNode {
     this.sizeProperty = new SimpleLongProperty(size);
     this.numberOfFilesProperty = new SimpleLongProperty(1);
     this.fileName = new SimpleStringProperty(path.getFileName().toString());
-    setFileExtension();
   }
 
   public String getMimeType() {
@@ -63,7 +62,7 @@ public class FileNode implements IFileSystemNode {
     return numberOfFilesProperty.get();
   }
 
-  private void setFileExtension() {
+  public void setFileExtension() {
     Tika tika = new Tika();
     Try.of(() -> tika.detect(path.toFile()))
       .onSuccess(mimeType -> this.mimeType = mimeType)
