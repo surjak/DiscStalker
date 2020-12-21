@@ -1,9 +1,11 @@
 package com.frx.discstalker.model;
 
+import io.vavr.control.Try;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.apache.tika.Tika;
 
 import java.nio.file.Path;
 
@@ -12,12 +14,18 @@ public class FileNode implements IFileSystemNode {
   private final LongProperty sizeProperty;
   private final LongProperty numberOfFilesProperty;
   private final StringProperty fileName;
+  private String mimeType;
 
   public FileNode(Path path, Long size) {
     this.path = path;
     this.sizeProperty = new SimpleLongProperty(size);
     this.numberOfFilesProperty = new SimpleLongProperty(1);
     this.fileName = new SimpleStringProperty(path.getFileName().toString());
+    setFileExtension();
+  }
+
+  public String getMimeType() {
+    return this.mimeType;
   }
 
   @Override
@@ -54,4 +62,14 @@ public class FileNode implements IFileSystemNode {
   public Long getNumberOfFiles() {
     return numberOfFilesProperty.get();
   }
+
+  private void setFileExtension() {
+    Tika tika = new Tika();
+    Try.of(() -> tika.detect(path.toFile()))
+      .onSuccess(mimeType -> this.mimeType = mimeType)
+      .onFailure(throwable -> this.mimeType = "");
+
+    fileName.addListener((observable, oldValue, newValue) -> setFileExtension());
+  }
+
 }

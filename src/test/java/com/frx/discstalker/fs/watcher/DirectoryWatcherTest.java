@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class DirectoryWatcherTest {
   DirectoryWatcher watcher;
   private static final String TEST_PATH = "TEST_PATH";
+
   private static final String LOCAL_TEST_PATH = "src/test/resources/dirA";
 
   private static MockedStatic<Files> filesMockedStatic;

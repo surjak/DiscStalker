@@ -5,7 +5,7 @@ import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
 import com.frx.discstalker.view.ViewUtils;
-
+import com.frx.discstalker.statistics.StatisticsProvider;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
 import javafx.beans.binding.Bindings;
@@ -23,6 +23,9 @@ import java.nio.file.Paths;
 public class LiveDirectoryController {
   @Inject
   private ILiveDirectoryTreeFactory liveDirectoryTreeFactory;
+
+  @FXML
+  private StatisticsController statisticsController;
 
   @FXML
   private TreeTableView<IFileSystemNode> treeTableView;
@@ -51,6 +54,7 @@ public class LiveDirectoryController {
 
   public void renderLiveTree() throws IOException {
     final var liveDirectoryTree = liveDirectoryTreeFactory.createAndRegister(path);
+    registerStatisticModel(liveDirectoryTree);
     final var root = (DirectoryNode) liveDirectoryTree.getRoot();
     final var rootItem = new TreeItem<IFileSystemNode>(root);
     fillTree(rootItem, root);
@@ -85,5 +89,10 @@ public class LiveDirectoryController {
 
   private void removeNodeFromTree(TreeItem<IFileSystemNode> parentTreeItem, IFileSystemNode node) {
     parentTreeItem.getChildren().removeIf(childTreeItem -> childTreeItem.getValue().equals(node));
+  }
+
+  private void registerStatisticModel(LiveDirectoryTree liveDirectoryTree) {
+    StatisticsProvider model = new StatisticsProvider(liveDirectoryTree);
+    statisticsController.registerStatisticModel(model);
   }
 }

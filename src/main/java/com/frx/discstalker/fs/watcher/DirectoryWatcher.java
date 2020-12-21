@@ -3,10 +3,7 @@ package com.frx.discstalker.fs.watcher;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 
@@ -36,6 +33,10 @@ public class DirectoryWatcher {
    * Starts watching the given path for changes.
    */
   public void watchDirectory(Path path) throws IOException {
+    if (!Files.isDirectory(path)) {
+      throw new NotDirectoryException(path.toString());
+    }
+
     path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
   }
 

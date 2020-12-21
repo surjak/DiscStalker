@@ -16,5 +16,6 @@
     <TreeTableView fx:id="treeTableView" prefWidth="500"/>
   </left>
   <right>
+    <fx:include source="statisticsView.fxml" fx:id="statistics"></fx:include>
   </right>
 </BorderPane>

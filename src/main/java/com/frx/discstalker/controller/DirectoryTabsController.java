@@ -2,7 +2,6 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.view.ViewLoader;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,12 +29,10 @@ public class DirectoryTabsController {
   @FXML
   Button addButton;
 
-  private final Injector injector;
   private final ViewLoader viewLoader;
 
   @Inject
-  public DirectoryTabsController(Injector injector, ViewLoader viewLoader) {
-    this.injector = injector;
+  public DirectoryTabsController(ViewLoader viewLoader) {
     this.viewLoader = viewLoader;
   }
 
