@@ -15,10 +15,10 @@ public class DirectoryNode implements IFileSystemNode {
   private final LongProperty numberOfFilesProperty;
   private final StringProperty directoryName;
 
-  public DirectoryNode(Path path) {
+  public DirectoryNode(Path path, Long size) {
     this.pathProperty = new SimpleObjectProperty<>(path);
     this.childNodes = FXCollections.observableArrayList();
-    this.sizeProperty = new SimpleLongProperty(0);
+    this.sizeProperty = new SimpleLongProperty(size);
     this.numberOfFilesProperty = new SimpleLongProperty(0);
     this.directoryName = new SimpleStringProperty(path.getFileName().toString());
   }

@@ -44,7 +44,8 @@ public class FileSystemScanner {
   }
 
   private DirectoryNode scanDirectory(Path path) throws IOException {
-    final var liveDir = new DirectoryNode(path);
+    final var size = Files.size(path);
+    final var liveDir = new DirectoryNode(path, size);
 
     final var childPaths = Files.list(path).toArray(Path[]::new);
     for (final var childPath : childPaths) {

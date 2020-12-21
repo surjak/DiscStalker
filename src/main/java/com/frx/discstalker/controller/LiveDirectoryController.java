@@ -4,9 +4,11 @@ import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
+import com.frx.discstalker.view.ViewUtils;
 import com.frx.discstalker.statistics.StatisticsProvider;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
@@ -42,8 +44,11 @@ public class LiveDirectoryController {
     pathColumn.setCellValueFactory(param -> param.getValue().getValue().getNodeNameProperty());
     treeTableView.getColumns().add(pathColumn);
 
-    final var sizeColumn = new TreeTableColumn<IFileSystemNode, Long>("Size");
-    sizeColumn.setCellValueFactory(param -> param.getValue().getValue().getSizeProperty().asObject());
+    final var sizeColumn = new TreeTableColumn<IFileSystemNode, String>("Size");
+    sizeColumn.setCellValueFactory(param -> {
+      final var sizeProperty = param.getValue().getValue().getSizeProperty();
+      return Bindings.createStringBinding(() -> ViewUtils.formatSize(sizeProperty.get()), sizeProperty);
+    });
     treeTableView.getColumns().add(sizeColumn);
   }
 

@@ -21,14 +21,14 @@ class DirectoryNodeTest {
   @BeforeEach
   public void initDirectory() {
     Path path = Paths.get("PATH");
-    directoryNode = new DirectoryNode(path);
+    directoryNode = new DirectoryNode(path, 0L);
   }
 
   @Test
   public void givenDirectoryNodeWhenAddDirectoryAsChildThenChildNumberIncreases() {
     //given
     Path path = Paths.get("PATH");
-    DirectoryNode childNode = new DirectoryNode(path);
+    DirectoryNode childNode = new DirectoryNode(path, 0L);
 
     //when
     directoryNode.addChild(childNode);
@@ -42,7 +42,7 @@ class DirectoryNodeTest {
     //given
     Long EXPECTED_SIZE = 50L;
     Path path = Paths.get("PATH");
-    DirectoryNode childNode = Mockito.spy(new DirectoryNode(path));
+    DirectoryNode childNode = Mockito.spy(new DirectoryNode(path, 0L));
 
     //when
     when(childNode.getSize()).thenReturn(EXPECTED_SIZE);
@@ -56,7 +56,7 @@ class DirectoryNodeTest {
   public void givenDirectoryNodeWhenAddDirectoryAsChildThenNumberOfFilesDoesNotIncrease() {
     //given
     Path path = Paths.get("PATH");
-    DirectoryNode childNode = new DirectoryNode(path);
+    DirectoryNode childNode = new DirectoryNode(path, 0L);
 
     //when
     directoryNode.addChild(childNode);
