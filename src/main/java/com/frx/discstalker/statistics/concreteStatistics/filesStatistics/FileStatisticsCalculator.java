@@ -25,17 +25,25 @@ public class FileStatisticsCalculator implements StatisticCalculator {
     List<FileNode> fileSystemNodes = new ArrayList<>();
     fillListWithAllFilesInTree(fileSystemNodes, root);
     if (firstCalculation) {
-      Observable.fromIterable(fileSystemNodes)
-        .doOnNext(FileNode::setFileExtension)
-        .subscribeOn(Schedulers.io())
-        .observeOn(JavaFxScheduler.platform())
-        .doOnComplete(() -> filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes)))
-        .subscribe();
-      firstCalculation = false;
+      setFileExtensionAsPartOfFirstCalculation(fileSystemNodes);
       return;
     }
-    filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes));
+    calculateStatistics(fileSystemNodes);
 
+  }
+
+  private void calculateStatistics(List<FileNode> fileSystemNodes) {
+    filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes));
+  }
+
+  private void setFileExtensionAsPartOfFirstCalculation(List<FileNode> fileSystemNodes) {
+    Observable.fromIterable(fileSystemNodes)
+      .doOnNext(FileNode::setFileExtension)
+      .subscribeOn(Schedulers.io())
+      .observeOn(JavaFxScheduler.platform())
+      .doOnComplete(() -> filesStatistics.forEach(statisticByType -> statisticByType.calculateValue(fileSystemNodes)))
+      .subscribe();
+    firstCalculation = false;
   }
 
   private void fillListWithAllFilesInTree(List<FileNode> fileSystemNodes, IFileSystemNode root) {
