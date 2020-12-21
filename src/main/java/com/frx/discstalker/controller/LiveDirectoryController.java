@@ -5,7 +5,7 @@ import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
 import com.frx.discstalker.view.ViewUtils;
-import com.google.common.collect.Iterators;
+
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
 import javafx.beans.binding.Bindings;
@@ -16,8 +16,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.StringCharacterIterator;
-import java.util.stream.Stream;
 
 /**
  * Created by surja on 29.11.2020
