@@ -10,26 +10,24 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   private static final String STATISTIC_NAME = "Percentage usage of allowed space";
 
-  private Long maxSizeInGB;
+  private Long maxSizeInMB;
 
-  public PercentageUsageOfAllowedSpace(Long maxSizeInGB) {
+  public PercentageUsageOfAllowedSpace(Long maxSizeInMB) {
     super(STATISTIC_NAME);
-    this.maxSizeInGB = maxSizeInGB;
+    this.maxSizeInMB = maxSizeInMB;
   }
 
   @Override
   public void calculateValue(List<DirectoryNode> listWithRootElementAsFirstIndex) {
     DirectoryNode directoryNode = listWithRootElementAsFirstIndex.get(0);
     Long rootSize = directoryNode.getSize();
-    double rootSizeInGB = convertToGB(rootSize);
-    double percentageSize = rootSizeInGB / maxSizeInGB;
+    double rootSizeInGB = convertToMB(rootSize);
+    double percentageSize = rootSizeInGB / maxSizeInMB;
     int val = (int) (percentageSize * 100);
     setContent(val + "%");
   }
 
-  private double convertToGB(Long rootSize) {
-    // TODO: 20.12.2020 impl
-    //hardcoded
-    return 10.3423;
+  private double convertToMB(Long rootSize) {
+    return (double) rootSize / (1e6);
   }
 }

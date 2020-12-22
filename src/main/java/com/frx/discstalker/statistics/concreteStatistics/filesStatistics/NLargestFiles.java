@@ -35,6 +35,8 @@ public class NLargestFiles extends BaseFilesStatistic {
   private void writeIntoValue(Map<String, Long> statisticByType) {
     StringBuffer buffer = new StringBuffer();
     statisticByType.entrySet()
+      .stream()
+      .sorted((o1, o2) -> -1 * (int) (o1.getValue() - o2.getValue())) //workaround Comparator.comparingLong(Map.Entry::getValue).reversed()
       .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));
     System.out.println("alamakota");
     setContent(buffer.toString());
