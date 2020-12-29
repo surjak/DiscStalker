@@ -1,5 +1,6 @@
 package com.frx.discstalker.controller;
 
+import com.frx.discstalker.Utils;
 import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
@@ -16,6 +17,7 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 /**
  * Created by surja on 29.11.2020
@@ -40,6 +42,8 @@ public class LiveDirectoryController {
   public void initialize() {
     treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);
 
+    treeTableView.setRowFactory(this::rowFactory);
+
     final var pathColumn = new TreeTableColumn<IFileSystemNode, String>("Path");
     pathColumn.setCellValueFactory(param -> param.getValue().getValue().getNodeNameProperty());
     treeTableView.getColumns().add(pathColumn);
@@ -60,6 +64,35 @@ public class LiveDirectoryController {
     fillTree(rootItem, root);
     treeTableView.setRoot(rootItem);
     rootItem.setExpanded(true);
+  }
+
+  public TreeTableRow<IFileSystemNode> rowFactory(TreeTableView<IFileSystemNode> ttw) {
+    final var row = new TreeTableRow<IFileSystemNode>();
+    final var deleteMenuItem = new MenuItem("Delete");
+    final var contextMenu = new ContextMenu(deleteMenuItem);
+    row.setContextMenu(contextMenu);
+
+    deleteMenuItem.setOnAction(event -> {
+      final var node = row.getTreeItem().getValue();
+
+      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+      alert.setTitle("Remove file");
+      alert.setHeaderText("Are you sure?");
+      alert.setContentText("This will irreversibly remove " + node.getPath().toString());
+
+      Optional<ButtonType> result = alert.showAndWait();
+      result.ifPresent(response -> {
+        if (response == ButtonType.OK) {
+          try {
+            Utils.deleteRecursively(node.getPath());
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        }
+      });
+    });
+
+    return row;
   }
 
   private void fillTree(TreeItem<IFileSystemNode> treeItem, IFileSystemNode node) {
