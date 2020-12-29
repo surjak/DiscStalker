@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -40,6 +41,9 @@ public class DirectoryTabsController {
   @FXML
   Button saveButton;
 
+  @FXML
+  Button loadButton;
+
   private final ViewLoader viewLoader;
 
   /*
@@ -47,9 +51,6 @@ public class DirectoryTabsController {
   * (e.g. size quota) to serialize them in handleSaveAction().
   */
   private final HashMap<Tab, LiveDirectoryController> tabControllers = new HashMap<>();
-
-  // TODO: figure out where such file should be placed
-  private final String savedTabsPath = "/home/mateusz/stuff/tmp/tabs.json";
 
   @Inject
   public DirectoryTabsController(ViewLoader viewLoader) {
@@ -65,12 +66,31 @@ public class DirectoryTabsController {
   @FXML
   private void handleSaveAction(ActionEvent event) {
     List<String> tabPaths = tabControllers.values().stream().map(LiveDirectoryController::getPathString).collect(Collectors.toList());
+    Optional<File> file = saveFileToFS();
+    if (file.isEmpty()) return;
 
-    try (final var writer = new FileWriter(savedTabsPath)) {
+    try (final var writer = new FileWriter(file.get())) {
       final var gson = new GsonBuilder().setPrettyPrinting().create();
       gson.toJson(tabPaths, writer);
     } catch (IOException ex) {
       ex.printStackTrace();
+    }
+  }
+
+  @FXML
+  private void handleLoadAction() {
+    Optional<File> file = chooseFileFromFS();
+    if (file.isEmpty()) return;
+
+    try {
+      BufferedReader br = new BufferedReader(new FileReader(file.get()));
+
+      Type typeOfT = new TypeToken<Collection<String>>(){}.getType();
+      Collection<String> tabPaths = new Gson().fromJson(br, typeOfT);
+
+      tabPaths.stream().map(File::new).forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
+    } catch (FileNotFoundException e) {
+      System.out.println("User configuration file " + file.get().toString() + " not found");
     }
   }
 
@@ -82,18 +102,6 @@ public class DirectoryTabsController {
           tabControllers.remove(event.getValue());
         }
       });
-
-
-    try {
-      BufferedReader br = new BufferedReader(new FileReader(savedTabsPath));
-
-      Type typeOfT = new TypeToken<Collection<String>>(){}.getType();
-      Collection<String> tabPaths = new Gson().fromJson(br, typeOfT);
-
-      tabPaths.stream().map(File::new).forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
-    } catch (FileNotFoundException e) {
-      System.out.println("User saved tabs file" + savedTabsPath + " not found");
-    }
   }
 
   private void createAndDisplayNewTabWithLiveDirectoryTree(File file) {
@@ -125,9 +133,32 @@ public class DirectoryTabsController {
 
   private Optional<File> chooseDirectoryFromFS() {
     DirectoryChooser chooser = new DirectoryChooser();
-    chooser.setTitle("Open File");
+    chooser.setTitle("Choose Directory");
     chooser.setInitialDirectory(new File(System.getProperty("user.home")));
     File file = chooser.showDialog(new Stage());
     return Optional.ofNullable(file);
+  }
+
+  private Optional<File> chooseFileFromFS() {
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Load Configuration File");
+    chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+    File file = chooser.showOpenDialog(new Stage());
+    return Optional.ofNullable(file);
+  }
+
+  private Optional<File> saveFileToFS() {
+    FileChooser chooser = new FileChooser();
+    chooser.setTitle("Save Configuration File");
+    chooser.setInitialDirectory(new File(System.getProperty("user.home")));
+    chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+    chooser.setInitialFileName("config.json");
+    File chosenFile = chooser.showSaveDialog((new Stage()));
+    return Optional.ofNullable(chosenFile)
+      .map(file -> {
+        if(file.getName().toLowerCase().endsWith(".json")) return file;
+        return new File(file.toString() + ".json");
+      });
   }
 }
