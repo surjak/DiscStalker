@@ -1,5 +1,6 @@
 package com.frx.discstalker.controller;
 
+import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,9 +14,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -45,6 +43,7 @@ public class DirectoryTabsController {
   Button loadButton;
 
   private final ViewLoader viewLoader;
+  private final FileUtil fileUtil;
 
   /*
   * This map tracks opened tabs and allows to withdraw specific information
@@ -53,20 +52,21 @@ public class DirectoryTabsController {
   private final HashMap<Tab, LiveDirectoryController> tabControllers = new HashMap<>();
 
   @Inject
-  public DirectoryTabsController(ViewLoader viewLoader) {
+  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil) {
     this.viewLoader = viewLoader;
+    this.fileUtil = fileUtil;
   }
 
   @FXML
   private void handleAddAction(ActionEvent event) {
-    Optional<File> file = chooseDirectoryFromFS();
+    Optional<File> file = fileUtil.chooseDirectoryFromFS();
     file.ifPresent(this::createAndDisplayNewTabWithLiveDirectoryTree);
   }
 
   @FXML
   private void handleSaveAction(ActionEvent event) {
     List<String> tabPaths = tabControllers.values().stream().map(LiveDirectoryController::getPathString).collect(Collectors.toList());
-    Optional<File> file = saveFileToFS();
+    Optional<File> file = fileUtil.saveFileToFS();
     if (file.isEmpty()) return;
 
     try (final var writer = new FileWriter(file.get())) {
@@ -79,7 +79,7 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleLoadAction() {
-    Optional<File> file = chooseFileFromFS();
+    Optional<File> file = fileUtil.chooseFileFromFS();
     if (file.isEmpty()) return;
 
     try {
@@ -129,36 +129,5 @@ public class DirectoryTabsController {
     LiveDirectoryController controller = loader.getController();
     controller.setPath(fileAsString);
     controller.renderLiveTree();
-  }
-
-  private Optional<File> chooseDirectoryFromFS() {
-    DirectoryChooser chooser = new DirectoryChooser();
-    chooser.setTitle("Choose Directory");
-    chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-    File file = chooser.showDialog(new Stage());
-    return Optional.ofNullable(file);
-  }
-
-  private Optional<File> chooseFileFromFS() {
-    FileChooser chooser = new FileChooser();
-    chooser.setTitle("Load Configuration File");
-    chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-    chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-    File file = chooser.showOpenDialog(new Stage());
-    return Optional.ofNullable(file);
-  }
-
-  private Optional<File> saveFileToFS() {
-    FileChooser chooser = new FileChooser();
-    chooser.setTitle("Save Configuration File");
-    chooser.setInitialDirectory(new File(System.getProperty("user.home")));
-    chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
-    chooser.setInitialFileName("config.json");
-    File chosenFile = chooser.showSaveDialog((new Stage()));
-    return Optional.ofNullable(chosenFile)
-      .map(file -> {
-        if(file.getName().toLowerCase().endsWith(".json")) return file;
-        return new File(file.toString() + ".json");
-      });
   }
 }
