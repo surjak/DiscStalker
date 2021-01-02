@@ -37,7 +37,18 @@ public class DirectoryWatcher {
       throw new NotDirectoryException(path.toString());
     }
 
-    path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    // When the directory is moved, it's still watched, although the originally
+    // watched path no longer exists. If we want to register a new path
+    // pointing to the same directory, it is considered watched and we get the same watch key
+    // as during the first registration. To fix this, we compare the registered path
+    // with the new path and re-register if needed.
+    // This way the watched key always references the actual directory path.
+    final var key = path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    final var watchedPath = (Path) key.watchable();
+    if (!watchedPath.equals(path)) {
+      key.cancel();
+      path.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+    }
   }
 
   /**
