@@ -38,6 +38,10 @@ public class LiveDirectoryController {
     this.path = Paths.get(path);
   }
 
+  public String getPathString() {
+    return this.path.toString();
+  }
+
   @FXML
   public void initialize() {
     treeTableView.setColumnResizePolicy(TreeTableView.CONSTRAINED_RESIZE_POLICY);

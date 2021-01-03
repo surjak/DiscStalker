@@ -2,8 +2,8 @@
 
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
 <AnchorPane
   xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
@@ -11,12 +11,20 @@
   prefHeight="600.0" prefWidth="900.0"
   minHeight="600.0" minWidth="900.0">
   <TabPane
-    maxWidth="900.0"
+    maxWidth="825.0"
     fx:id="directoriesTabPane"/>
-  <HBox AnchorPane.topAnchor="2.5" AnchorPane.rightAnchor="5.0">
+  <VBox AnchorPane.topAnchor="2.5" AnchorPane.rightAnchor="5.0" spacing="4.0" alignment="BASELINE_RIGHT">
     <Button
       fx:id="addButton"
       onAction="#handleAddAction"
-      text="+"/>
-  </HBox>
+      text="add"/>
+    <Button
+      fx:id="saveButton"
+      onAction="#handleSaveAction"
+      text="save"/>
+    <Button
+      fx:id="loadButton"
+      onAction="#handleLoadAction"
+      text="load"/>
+  </VBox>
 </AnchorPane>
