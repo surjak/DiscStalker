@@ -1,17 +1,25 @@
 package com.frx.discstalker.controller;
 
 import com.frx.discstalker.service.notification.ErrorNotification;
+import com.frx.discstalker.statistics.StatisticsProvider;
+import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
+import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
+import com.google.common.collect.ImmutableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 
-import java.util.Optional;
+import java.util.Objects;
 
+/**
+ * Created by nazkord on 04.01.2021
+ */
 public class NotificationController {
 
   private static final String NOTIFICATION_TITLE = "Maximum size of the chosen directory";
+  private StatisticsProvider statisticsProvider;
 
   @FXML
   private Text notificationTitle;
@@ -30,7 +38,15 @@ public class NotificationController {
 
   @FXML
   private void handleSetAction(ActionEvent event) {
-    System.out.println(getNumericValueFromTextField());
+    Long newMaxSizeInMB = getNumericValueFromTextField();
+    statisticsProvider.registerCalculator(
+      new DirectoryStatisticsCalculator(
+        ImmutableList.of(new PercentageUsageOfAllowedSpace(newMaxSizeInMB))));
+  }
+
+  public void registerStatisticModel(StatisticsProvider statisticsProvider) {
+    Objects.requireNonNull(statisticsProvider);
+    this.statisticsProvider = statisticsProvider;
   }
 
   private void setUpOnlyNumericValuesForTextField() {
@@ -41,14 +57,14 @@ public class NotificationController {
     });
   }
 
-  private Optional<Long> getNumericValueFromTextField() {
+  private Long getNumericValueFromTextField() {
     try {
-      return Optional.of(Long.parseLong(maximumSizeField.getText()));
+      return Long.parseLong(maximumSizeField.getText());
     } catch (NumberFormatException e) {
       new ErrorNotification("Bad input: " + maximumSizeField.getText(), "You must provide the numeric value without dot")
         .show();
       System.out.println("Error parsing int (" + maximumSizeField.getText() + ") from field." + e);
-      return Optional.empty();
+      return 0L;
     }
   }
 }
