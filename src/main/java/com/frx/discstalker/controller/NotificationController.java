@@ -18,7 +18,7 @@ import java.util.Objects;
  */
 public class NotificationController {
 
-  private static final String NOTIFICATION_TITLE = "Maximum size of the chosen directory";
+  private static final String NOTIFICATION_TITLE = "Maximum size in MB of the chosen directory";
   private StatisticsProvider statisticsProvider;
 
   @FXML

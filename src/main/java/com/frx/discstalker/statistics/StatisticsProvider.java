@@ -44,7 +44,7 @@ public class StatisticsProvider {
     unregisterCalculator(statisticCalculator);
     calculators.add(statisticCalculator);
     fillStatisticsListWith(statisticCalculator);
-    calculateStatistics();
+    calculateStatisticsFor(statisticCalculator);
   }
 
   public void registerCalculators(List<StatisticCalculator> statisticCalculators) {
@@ -73,7 +73,11 @@ public class StatisticsProvider {
     statisticList.addAll(statisticCalculator.getStatistics());
   }
 
+  private void calculateStatisticsFor(StatisticCalculator statisticCalculator) {
+    statisticCalculator.calculate(directoryTree.getRoot());
+  }
+
   private void calculateStatistics() {
-    calculators.forEach(statisticCalculator -> statisticCalculator.calculate(directoryTree.getRoot()));
+    calculators.forEach(this::calculateStatisticsFor);
   }
 }

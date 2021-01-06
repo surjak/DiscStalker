@@ -38,7 +38,6 @@ public class NLargestFiles extends BaseFilesStatistic {
       .stream()
       .sorted((o1, o2) -> -1 * (int) (o1.getValue() - o2.getValue())) //workaround Comparator.comparingLong(Map.Entry::getValue).reversed()
       .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));
-    System.out.println("alamakota");
     setContent(buffer.toString());
   }
 }
