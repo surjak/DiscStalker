@@ -109,8 +109,17 @@ a podczas wczytywania reprezentacji systemu plików (`FileSystemScanner`)
 każdy katalog jest dodawany do obserwowanych ścieżek.
 W odpowiedzi na zdarzenia modyfikacji systemu plików (pochodzące z `DirectoryWatcher`)
 reprezentacja obiektowa jest stosownie modyfikowana, w celu odzwierciedlenia tych zmian.
-
-## 4. Interfejs użytkownika
+## 4. Moduł statystyk
+![](./img/stat_uml.png)
+Bazowym interfacem jest `Statistic` oraz `StatisticCalculator`.
+`StatisticProvider` posiada listę wszystkich statystyk,
+które są potem dostarczane do kontrolera oraz wyświetlane w widoku.
+Konkretne statystyki są dostarczane przez `StatisticCalculator`.
+Kalkulacja statystyk odbywa się co 5 sekund, lecz wtedy i tylko wtedy,
+gdy podczas tych 5-ciu sekund pojawił się jakiś event dotyczący obecnego `LiveDirectoryTree`.
+Obiekt `StatisticProvider` jest tworzony w `LiveDirectoryController` oraz
+jest przekazywany do `StatisticControllera`, który zarządza widokiem statystyk.
+## 5. Interfejs użytkownika
 
 ![](./img/mvc.png)
 
