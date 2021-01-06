@@ -19,6 +19,9 @@ public class StatisticsController {
   @FXML
   private TableView tableView;
 
+  @FXML
+  private NotificationController notificationController;
+
   private StatisticsProvider statisticsProvider;
 
   @FXML
@@ -40,5 +43,6 @@ public class StatisticsController {
     Objects.requireNonNull(statisticsProvider);
     this.statisticsProvider = statisticsProvider;
     tableView.setItems(statisticsProvider.getStatisticList());
+    notificationController.registerStatisticModel(statisticsProvider);
   }
 }

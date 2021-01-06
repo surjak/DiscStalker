@@ -9,8 +9,13 @@ import java.util.List;
 public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   private static final String STATISTIC_NAME = "Percentage usage of allowed space";
+  private final static Long DEFAULT_MAX_DIRECTORY_SIZE = 200L;
+  private final Long maxSizeInMB;
 
-  private Long maxSizeInMB;
+  public PercentageUsageOfAllowedSpace() {
+    super(STATISTIC_NAME);
+    this.maxSizeInMB = DEFAULT_MAX_DIRECTORY_SIZE;
+  }
 
   public PercentageUsageOfAllowedSpace(Long maxSizeInMB) {
     super(STATISTIC_NAME);

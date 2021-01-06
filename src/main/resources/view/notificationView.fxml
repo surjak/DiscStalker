@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<BorderPane maxHeight="130.0" minWidth="400.0" prefHeight="100.0" prefWidth="400.0"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.frx.discstalker.controller.NotificationController">
+  <top>
+    <HBox alignment="CENTER">
+      <BorderPane.margin>
+        <Insets top="25.0"/>
+      </BorderPane.margin>
+      <Text fx:id="notificationTitle"/>
+    </HBox>
+  </top>
+  <center>
+    <HBox alignment="CENTER">
+      <TextField fx:id="maximumSizeField" promptText="Enter the number of MB"/>
+      <Button fx:id="setButton" mnemonicParsing="false" onAction="#handleSetAction" text="Set"/>
+    </HBox>
+  </center>
+</BorderPane>

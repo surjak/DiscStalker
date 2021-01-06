@@ -1,8 +1,6 @@
 package com.frx.discstalker.statistics;
 
 import com.frx.discstalker.fs.LiveDirectoryTree;
-import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
-import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.FileStatisticsCalculator;
 import com.frx.discstalker.statistics.concreteStatistics.StatisticCalculator;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -17,18 +15,13 @@ import java.util.concurrent.TimeUnit;
  * Created by surjak on 19.12.2020
  */
 public class StatisticsProvider {
-  private LiveDirectoryTree directoryTree;
-  private ObservableList<Statistic> statisticList = FXCollections.observableArrayList();
-  private List<StatisticCalculator> calculators = new ArrayList<>();
+  private final LiveDirectoryTree directoryTree;
+  private final ObservableList<Statistic> statisticList = FXCollections.observableArrayList();
+  private final List<StatisticCalculator> calculators = new ArrayList<>();
 
-  public StatisticsProvider(LiveDirectoryTree directoryTree) {
+  public StatisticsProvider(LiveDirectoryTree directoryTree, List<StatisticCalculator> statisticCalculators) {
     this.directoryTree = directoryTree;
-
-    registerCalculator(new FileStatisticsCalculator());
-    registerCalculator(new DirectoryStatisticsCalculator());
-
-    fillStatisticsList();
-    calculateStatistics();
+    this.registerCalculators(statisticCalculators);
 
     bufferEventsFor5SecondsAndRecalculateStatsIfEventOccurred(directoryTree);
   }
@@ -47,15 +40,44 @@ public class StatisticsProvider {
       .subscribe(directoryWatcherEvent -> calculateStatistics());
   }
 
-  private void registerCalculator(StatisticCalculator statisticCalculator) {
-    this.calculators.add(statisticCalculator);
+  public void registerCalculator(StatisticCalculator statisticCalculator) {
+    unregisterCalculator(statisticCalculator);
+    calculators.add(statisticCalculator);
+    fillStatisticsListWith(statisticCalculator);
+    calculateStatisticsFor(statisticCalculator);
   }
 
-  private void fillStatisticsList() {
-    calculators.stream().flatMap(statisticCalculator -> statisticCalculator.getStatistics().stream()).forEach(statisticList::add);
+  public void registerCalculators(List<StatisticCalculator> statisticCalculators) {
+    statisticCalculators.forEach(this::registerCalculator);
+  }
+
+  private void unregisterCalculator(StatisticCalculator statisticCalculator) {
+    findConcreteStatisticCalculatorBy(statisticCalculator.getClass())
+      .map(calculator -> {
+        unregisterStatisticsFrom(calculator);
+        return calculators.remove(calculator);
+      });
+  }
+
+  private Optional<StatisticCalculator> findConcreteStatisticCalculatorBy(Class<? extends StatisticCalculator> statisticCalculator) {
+    return calculators.stream()
+      .filter(calculator -> statisticCalculator.isAssignableFrom(calculator.getClass()))
+      .findFirst();
+  }
+
+  private void unregisterStatisticsFrom(StatisticCalculator statisticCalculator) {
+    statisticList.removeAll(statisticCalculator.getStatistics());
+  }
+
+  private void fillStatisticsListWith(StatisticCalculator statisticCalculator) {
+    statisticList.addAll(statisticCalculator.getStatistics());
+  }
+
+  private void calculateStatisticsFor(StatisticCalculator statisticCalculator) {
+    statisticCalculator.calculate(directoryTree.getRoot());
   }
 
   private void calculateStatistics() {
-    calculators.forEach(statisticCalculator -> statisticCalculator.calculate(directoryTree.getRoot()));
+    calculators.forEach(this::calculateStatisticsFor);
   }
 }

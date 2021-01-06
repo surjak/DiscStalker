@@ -13,7 +13,15 @@ import java.util.List;
  */
 public class DirectoryStatisticsCalculator implements StatisticCalculator {
 
-  private final ImmutableList<DirectoryStatistics> directoryStatistics = ImmutableList.of(new PercentageUsageOfAllowedSpace(200L));
+  private final List<DirectoryStatistics> directoryStatistics;
+
+  public DirectoryStatisticsCalculator() {
+    this.directoryStatistics = ImmutableList.of(new PercentageUsageOfAllowedSpace());
+  }
+
+  public DirectoryStatisticsCalculator(List<DirectoryStatistics> directoryStatistics) {
+    this.directoryStatistics = directoryStatistics;
+  }
 
   @Override
   public void calculate(IFileSystemNode root) {

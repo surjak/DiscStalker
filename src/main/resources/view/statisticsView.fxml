@@ -17,4 +17,7 @@
     </children>
   </VBox>
   </top>
+  <bottom>
+    <fx:include source="notificationView.fxml" fx:id="notification"/>
+  </bottom>
 </BorderPane>
