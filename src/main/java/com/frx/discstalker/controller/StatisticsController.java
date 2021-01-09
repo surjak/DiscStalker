@@ -24,12 +24,15 @@ public class StatisticsController {
 
   private StatisticsProvider statisticsProvider;
 
+  private static final String STAT_DESCRIPTION_COLUMN_TITLE = "Description";
+  private static final String STAT_VALUE_COLUMN_TITLE = "Value";
+
   @FXML
   public void initialize() {
     tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-    TableColumn<Statistic, String> statDescription = new TableColumn<>("Description");
-    TableColumn<Statistic, Object> statValue = new TableColumn<>("Value");
+    TableColumn<Statistic, String> statDescription = new TableColumn<>(STAT_DESCRIPTION_COLUMN_TITLE);
+    TableColumn<Statistic, Object> statValue = new TableColumn<>(STAT_VALUE_COLUMN_TITLE);
 
     statDescription.setCellValueFactory(param -> param.getValue().getName());
     statValue.setCellValueFactory(param -> param.getValue().getValue());

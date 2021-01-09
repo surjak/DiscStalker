@@ -79,13 +79,21 @@ public class LiveDirectoryController {
     final var contextMenu = new ContextMenu(deleteMenuItem);
     row.setContextMenu(contextMenu);
 
+    setDeleteMenuItemHandler(row, deleteMenuItem);
+
+    return row;
+  }
+
+  private void setDeleteMenuItemHandler(TreeTableRow<IFileSystemNode> row, MenuItem deleteMenuItem) {
     deleteMenuItem.setOnAction(event -> {
       final var node = row.getTreeItem().getValue();
 
-      Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-      alert.setTitle("Remove file");
-      alert.setHeaderText("Are you sure?");
-      alert.setContentText("This will irreversibly remove " + node.getPath().toString());
+      Alert alert = Utils.createJavaFXAlert(
+        Alert.AlertType.CONFIRMATION,
+        "Remove file",
+        "Are you sure?",
+        "This will irreversibly remove " + node.getPath().toString()
+      );
 
       Optional<ButtonType> result = alert.showAndWait();
       result.ifPresent(response -> {
@@ -98,8 +106,6 @@ public class LiveDirectoryController {
         }
       });
     });
-
-    return row;
   }
 
   private void fillTree(TreeItem<IFileSystemNode> treeItem, IFileSystemNode node) {

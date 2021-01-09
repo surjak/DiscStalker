@@ -65,16 +65,20 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleSaveAction(ActionEvent event) {
-    List<String> tabPaths = tabControllers.values().stream().map(LiveDirectoryController::getPathString).collect(Collectors.toList());
-    Optional<File> file = fileUtil.saveFileToFS();
-    if (file.isEmpty()) return;
+    List<String> tabPaths = tabControllers
+      .values()
+      .stream()
+      .map(LiveDirectoryController::getPathString)
+      .collect(Collectors.toList());
 
-    try (final var writer = new FileWriter(file.get())) {
-      final var gson = new GsonBuilder().setPrettyPrinting().create();
-      gson.toJson(tabPaths, writer);
-    } catch (IOException ex) {
-      ex.printStackTrace();
-    }
+    fileUtil.chooseSaveFilePath().ifPresent(file -> {
+      try (final var writer = new FileWriter(file)) {
+        final var gson = new GsonBuilder().setPrettyPrinting().create();
+        gson.toJson(tabPaths, writer);
+      } catch (IOException ex) {
+        ex.printStackTrace();
+      }
+    });
   }
 
   @FXML

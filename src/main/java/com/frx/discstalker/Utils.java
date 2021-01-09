@@ -1,5 +1,7 @@
 package com.frx.discstalker;
 
+import javafx.scene.control.Alert;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,5 +16,14 @@ public class Utils {
       .map(Path::toFile)
       .sorted((o1, o2) -> -o1.compareTo(o2))
       .forEach(File::delete);
+  }
+
+  public static Alert createJavaFXAlert(Alert.AlertType type, String title, String headerText, String content) {
+    Alert alert = new Alert(type);
+    alert.setTitle(title);
+    alert.setHeaderText(headerText);
+    alert.setContentText(content);
+
+    return alert;
   }
 }

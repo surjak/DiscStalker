@@ -57,12 +57,16 @@ public class LiveDirectoryTree {
     final var dirNode = directoryByPath.get(dirPath);
     final var childPath = event.getPath();
 
-    if (type == DirectoryWatcherEventType.MODIFIED) {
-      dirNode.getChildByPath(childPath).ifPresent(this::synchronizeNode);
-    } else if (type == DirectoryWatcherEventType.CREATED) {
-      fsScanner.scanRecursively(childPath).ifPresent(dirNode::addChild);
-    } else if (type == DirectoryWatcherEventType.DELETED) {
-      dirNode.getChildByPath(childPath).ifPresent(dirNode::removeChild);
+    switch (type) {
+      case MODIFIED:
+        dirNode.getChildByPath(childPath).ifPresent(this::synchronizeNode);
+        break;
+      case CREATED:
+        fsScanner.scanRecursively(childPath).ifPresent(dirNode::addChild);
+        break;
+      case DELETED:
+        dirNode.getChildByPath(childPath).ifPresent(dirNode::removeChild);
+        break;
     }
   }
 
