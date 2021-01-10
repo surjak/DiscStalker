@@ -15,9 +15,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.summingLong;
@@ -41,7 +39,7 @@ public class FileSize extends BaseFilesStatistic {
   @Override
   public void calculateValue(List<FileNode> fileSystemNodes) {
     Map<String, Long> statisticByType = fileSystemNodes.stream()
-      .collect(groupingBy(FileNode::getMimeType, summingLong(FileNode::getSize)));
+      .collect(groupingBy(FileNode::getExtension, summingLong(FileNode::getSize)));
 
     writeIntoValue(statisticByType);
   }
@@ -56,12 +54,13 @@ public class FileSize extends BaseFilesStatistic {
     keys.removeIf(a -> true);
 
     statisticByType.entrySet()
+      .stream()
+      .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
       .forEach(stringLongEntry -> {
         keys.add(stringLongEntry.getKey());
         chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), stringLongEntry.getValue()));
-        doubleProperty.setValue(chartData.size() * 200);
+        doubleProperty.setValue(chartData.size() * 100);
       });
-
   }
 
   @Override

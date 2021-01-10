@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.apache.tika.Tika;
+import org.apache.tika.config.TikaConfig;
+import org.apache.tika.mime.MimeTypeException;
 
 import java.nio.file.Path;
 
@@ -25,6 +27,14 @@ public class FileNode implements IFileSystemNode {
 
   public String getMimeType() {
     return this.mimeType;
+  }
+
+  public String getExtension() {
+    try {
+      return TikaConfig.getDefaultConfig().getMimeRepository().forName(mimeType).getExtension();
+    } catch (MimeTypeException e) {
+      return mimeType;
+    }
   }
 
   @Override
@@ -70,5 +80,4 @@ public class FileNode implements IFileSystemNode {
 
     fileName.addListener((observable, oldValue, newValue) -> setFileExtension());
   }
-
 }
