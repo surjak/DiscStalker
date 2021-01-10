@@ -1,6 +1,8 @@
 package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.FileNode;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 
 import java.util.List;
 import java.util.Map;
@@ -30,5 +32,10 @@ public class NumberOfFiles extends BaseFilesStatistic {
       .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));
 
     setContent(buffer.toString());
+  }
+
+  @Override
+  public Node getValueAsNode() {
+    return new Label("aaa");
   }
 }

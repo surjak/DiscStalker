@@ -39,9 +39,15 @@ public class NotificationController {
   @FXML
   private void handleSetAction(ActionEvent event) {
     Long newMaxSizeInMB = getNumericValueFromTextField();
-    statisticsProvider.registerCalculator(
-      new DirectoryStatisticsCalculator(
-        ImmutableList.of(new PercentageUsageOfAllowedSpace(newMaxSizeInMB))));
+    statisticsProvider
+      .getStatisticList()
+      .stream()
+      .filter(statistic -> statistic instanceof PercentageUsageOfAllowedSpace)
+      .findFirst()
+      .map(statistic -> (PercentageUsageOfAllowedSpace) statistic)
+      .ifPresent(percentageUsageOfAllowedSpace -> percentageUsageOfAllowedSpace.setMaxSizeInMB(newMaxSizeInMB));
+
+    statisticsProvider.calculateStatistics();
   }
 
   public void registerStatisticModel(StatisticsProvider statisticsProvider) {

@@ -1,6 +1,8 @@
 package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.FileNode;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,5 +41,9 @@ public class NLargestFiles extends BaseFilesStatistic {
       .sorted((o1, o2) -> -1 * (int) (o1.getValue() - o2.getValue())) //workaround Comparator.comparingLong(Map.Entry::getValue).reversed()
       .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));
     setContent(buffer.toString());
+  }
+  @Override
+  public Node getValueAsNode() {
+    return new Label("aaa");
   }
 }

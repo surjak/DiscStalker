@@ -1,6 +1,9 @@
 package com.frx.discstalker.statistics.concreteStatistics.directoryStatistics;
 
 import com.frx.discstalker.model.DirectoryNode;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 
 import java.util.List;
 /**
@@ -10,7 +13,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   private static final String STATISTIC_NAME = "Percentage usage of allowed space";
   private final static Long DEFAULT_MAX_DIRECTORY_SIZE = 200L;
-  private final Long maxSizeInMB;
+  private Long maxSizeInMB;
 
   public PercentageUsageOfAllowedSpace() {
     super(STATISTIC_NAME);
@@ -34,5 +37,22 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   private double convertToMB(Long rootSize) {
     return (double) rootSize / (1e6);
+  }
+
+  @Override
+  public Node getValueAsNode() {
+    BorderPane borderPane = new BorderPane();
+    Label label = new Label();
+//    content.addListener((observable, oldValue, newValue) -> {
+//      System.out.println(newValue + " " + oldValue);
+//    });
+    label.textProperty().bind(content);
+    borderPane.setCenter(label);
+
+    return borderPane;
+  }
+
+  public void setMaxSizeInMB(Long maxSizeInMB) {
+    this.maxSizeInMB = maxSizeInMB;
   }
 }

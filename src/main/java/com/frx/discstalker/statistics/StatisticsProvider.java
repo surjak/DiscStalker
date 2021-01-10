@@ -41,7 +41,6 @@ public class StatisticsProvider {
   }
 
   public void registerCalculator(StatisticCalculator statisticCalculator) {
-    unregisterCalculator(statisticCalculator);
     calculators.add(statisticCalculator);
     fillStatisticsListWith(statisticCalculator);
     calculateStatisticsFor(statisticCalculator);
@@ -49,24 +48,6 @@ public class StatisticsProvider {
 
   public void registerCalculators(List<StatisticCalculator> statisticCalculators) {
     statisticCalculators.forEach(this::registerCalculator);
-  }
-
-  private void unregisterCalculator(StatisticCalculator statisticCalculator) {
-    findConcreteStatisticCalculatorBy(statisticCalculator.getClass())
-      .map(calculator -> {
-        unregisterStatisticsFrom(calculator);
-        return calculators.remove(calculator);
-      });
-  }
-
-  private Optional<StatisticCalculator> findConcreteStatisticCalculatorBy(Class<? extends StatisticCalculator> statisticCalculator) {
-    return calculators.stream()
-      .filter(calculator -> statisticCalculator.isAssignableFrom(calculator.getClass()))
-      .findFirst();
-  }
-
-  private void unregisterStatisticsFrom(StatisticCalculator statisticCalculator) {
-    statisticList.removeAll(statisticCalculator.getStatistics());
   }
 
   private void fillStatisticsListWith(StatisticCalculator statisticCalculator) {
@@ -77,7 +58,7 @@ public class StatisticsProvider {
     statisticCalculator.calculate(directoryTree.getRoot());
   }
 
-  private void calculateStatistics() {
+  public void calculateStatistics() {
     calculators.forEach(this::calculateStatisticsFor);
   }
 }
