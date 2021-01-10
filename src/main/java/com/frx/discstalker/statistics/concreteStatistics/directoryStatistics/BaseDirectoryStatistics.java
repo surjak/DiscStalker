@@ -11,7 +11,7 @@ import javafx.beans.property.StringProperty;
 public abstract class BaseDirectoryStatistics implements DirectoryStatistics {
 
   private final String STATISTIC_NAME;
-  protected SimpleObjectProperty content;
+  private SimpleObjectProperty content;
 
   public BaseDirectoryStatistics(String statisticName) {
     this.content = new SimpleObjectProperty("");

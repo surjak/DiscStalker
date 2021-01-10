@@ -19,6 +19,11 @@ public class StatisticsController {
 
   private StatisticsProvider statisticsProvider;
 
+  @FXML
+  public void initialize(){
+    statisticTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+  }
+
   public void registerStatisticModel(StatisticsProvider statisticsProvider) {
     Objects.requireNonNull(statisticsProvider);
     this.statisticsProvider = statisticsProvider;
