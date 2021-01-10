@@ -58,7 +58,7 @@ public class FileSize extends BaseFilesStatistic {
       .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
       .forEach(stringLongEntry -> {
         keys.add(stringLongEntry.getKey());
-        chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), stringLongEntry.getValue()));
+        chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), convertToMB(stringLongEntry.getValue())));
         doubleProperty.setValue(chartData.size() * 100);
       });
   }
@@ -73,12 +73,12 @@ public class FileSize extends BaseFilesStatistic {
 
     CategoryAxis xAxis = new CategoryAxis();
     xAxis.setCategories(keys);
-    xAxis.setLabel("Mime Type");
+    xAxis.setLabel("File Type/Extension");
     xAxis.setSide(Side.TOP);
 
     scrollPane.fitToWidthProperty();
     NumberAxis yAxis = new NumberAxis();
-    yAxis.setLabel("Grouped file size");
+    yAxis.setLabel("Grouped file size [MB]");
 
 
     XYChart.Series<String, Number> series = new XYChart.Series<>();
@@ -91,5 +91,9 @@ public class FileSize extends BaseFilesStatistic {
     barChart.prefWidthProperty().bind(xAxis.widthProperty());
     scrollPane.setContent(barChart);
     return scrollPane;
+  }
+
+  private double convertToMB(Long sizeInBytes) {
+    return (double) sizeInBytes / (1e6);
   }
 }

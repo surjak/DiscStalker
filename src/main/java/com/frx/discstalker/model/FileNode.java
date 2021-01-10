@@ -1,5 +1,6 @@
 package com.frx.discstalker.model;
 
+import com.google.common.base.Strings;
 import io.vavr.control.Try;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
@@ -31,7 +32,11 @@ public class FileNode implements IFileSystemNode {
 
   public String getExtension() {
     try {
-      return TikaConfig.getDefaultConfig().getMimeRepository().forName(mimeType).getExtension();
+      String extension = TikaConfig.getDefaultConfig().getMimeRepository().forName(mimeType).getExtension();
+      if (Strings.isNullOrEmpty(extension)) {
+        extension = mimeType;
+      }
+      return extension;
     } catch (MimeTypeException e) {
       return mimeType;
     }

@@ -63,6 +63,8 @@ public class NotificationController {
         .show();
       System.out.println("Error parsing int (" + maximumSizeField.getText() + ") from field." + e);
       return 0L;
+    } finally {
+      maximumSizeField.clear();
     }
   }
 }

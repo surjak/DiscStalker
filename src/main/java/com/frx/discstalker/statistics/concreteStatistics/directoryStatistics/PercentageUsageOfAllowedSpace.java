@@ -4,10 +4,13 @@ import com.frx.discstalker.model.DirectoryNode;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import java.util.List;
 
@@ -60,6 +63,12 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   @Override
   public Node getValueAsNode() {
+    Label label = new Label();
+    label.textProperty().bind(getValue());
+    label.setAlignment(Pos.CENTER);
+    label.setMaxWidth(Double.MAX_VALUE);
+    label.setFont(new Font("Arial", 20));
+
     PieChart.Data free = new PieChart.Data("Free", maxSizeInMB);
     free.pieValueProperty().bind(freeSpaceProperty);
     PieChart.Data used = new PieChart.Data("Used", 0);
@@ -70,7 +79,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     );
     PieChart pieChart = new PieChart();
     pieChart.dataProperty().setValue(pieChartData);
-    return pieChart;
+    return new VBox(label, pieChart);
   }
 
   public void setMaxSizeInMB(Long maxSizeInMB) {
