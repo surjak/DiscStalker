@@ -8,7 +8,9 @@ import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,6 +30,12 @@ public class StatisticsProvider {
 
   public ObservableList<Statistic> getStatisticList() {
     return statisticList;
+  }
+
+  public Optional<Statistic> findConcreteStatisticBy(Class<? extends Statistic> concreteStatisticName) {
+    return statisticList.stream()
+      .filter(statistic -> statistic.getClass().equals(concreteStatisticName))
+      .findFirst();
   }
 
   private void bufferEventsFor5SecondsAndRecalculateStatsIfEventOccurred(LiveDirectoryTree directoryTree) {

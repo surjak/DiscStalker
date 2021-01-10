@@ -2,9 +2,7 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.service.notification.ErrorNotification;
 import com.frx.discstalker.statistics.StatisticsProvider;
-import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
-import com.google.common.collect.ImmutableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,14 +37,8 @@ public class NotificationController {
   @FXML
   private void handleSetAction(ActionEvent event) {
     Long newMaxSizeInMB = getNumericValueFromTextField();
-    statisticsProvider
-      .getStatisticList()
-      .stream()
-      .filter(statistic -> statistic instanceof PercentageUsageOfAllowedSpace)
-      .findFirst()
-      .map(statistic -> (PercentageUsageOfAllowedSpace) statistic)
-      .ifPresent(percentageUsageOfAllowedSpace -> percentageUsageOfAllowedSpace.setMaxSizeInMB(newMaxSizeInMB));
-
+    statisticsProvider.findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
+      .ifPresent(statistic -> ((PercentageUsageOfAllowedSpace) statistic).setMaxSizeInMB(newMaxSizeInMB));
     statisticsProvider.calculateStatistics();
   }
 
