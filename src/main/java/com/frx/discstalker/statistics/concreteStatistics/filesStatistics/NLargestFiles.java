@@ -95,10 +95,12 @@ public class NLargestFiles extends BaseFilesStatistic {
   private void deleteSelectedItem(ListCell<FileNode> cell) {
     final var node = cell.getItem();
 
-    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    alert.setTitle("Remove file");
-    alert.setHeaderText("Are you sure?");
-    alert.setContentText("This will irreversibly remove " + node.getPath().toString());
+    Alert alert = Utils.createJavaFXAlert(
+      Alert.AlertType.CONFIRMATION,
+      "Remove file",
+      "Are you sure?",
+      "This will irreversibly remove " + node.getPath().toString()
+    );
 
     Optional<ButtonType> result = alert.showAndWait();
     result.ifPresent(response -> {

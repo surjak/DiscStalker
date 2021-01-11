@@ -23,6 +23,6 @@ class PercentageUsageOfAllowedSpaceTest {
     percentageUsageOfAllowedSpace.calculateValue(java.util.List.of(rootNode));
 
     //then
-    assertEquals(percentageUsageOfAllowedSpace.getValue().getValue().toString(), "40%");
+    assertEquals(percentageUsageOfAllowedSpace.getValue().getValue().toString(), "40");
   }
 }
