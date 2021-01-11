@@ -34,10 +34,10 @@ class NumberOfFilesTest {
     FileNode fileNode4 = mock(FileNode.class);
 
     //when
-    when(fileNode1.getMimeType()).thenReturn("text/plain");
-    when(fileNode2.getMimeType()).thenReturn("text/plain");
-    when(fileNode3.getMimeType()).thenReturn("text/pdf");
-    when(fileNode4.getMimeType()).thenReturn("text/pdf");
+    when(fileNode1.getExtension()).thenReturn("text/plain");
+    when(fileNode2.getExtension()).thenReturn("text/plain");
+    when(fileNode3.getExtension()).thenReturn("text/pdf");
+    when(fileNode4.getExtension()).thenReturn("text/pdf");
 
     return List.of(fileNode1, fileNode2, fileNode3, fileNode4);
   }

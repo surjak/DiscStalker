@@ -1,6 +1,7 @@
 package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.model.FileNode;
+import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.valueConverters.IntegerStringConverter;
 import com.google.inject.internal.cglib.core.$AbstractClassGenerator;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -14,6 +15,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Tooltip;
 
 import java.util.*;
 
@@ -105,6 +107,8 @@ public class FileSize extends BaseFilesStatistic {
   private NumberAxis createYAxis() {
     NumberAxis yAxis = new NumberAxis();
     yAxis.setLabel(Y_LABEL);
+    yAxis.setTickLabelFormatter(new IntegerStringConverter());
+    yAxis.setMinorTickVisible(false);
     return yAxis;
   }
 
