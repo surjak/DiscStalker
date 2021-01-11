@@ -21,7 +21,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
   private final static Long DEFAULT_MAX_DIRECTORY_SIZE = 2000000L;
   private final SimpleDoubleProperty freeSpaceProperty = new SimpleDoubleProperty(1);
   private final SimpleDoubleProperty usedSpaceProperty = new SimpleDoubleProperty(0);
-  private Long maxSizeInMB;
+  private final SimpleLongProperty maxSizeInMB = new SimpleLongProperty(DEFAULT_MAX_DIRECTORY_SIZE);
 
   public PercentageUsageOfAllowedSpace() {
     this(DEFAULT_MAX_DIRECTORY_SIZE);
@@ -29,11 +29,11 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   public PercentageUsageOfAllowedSpace(Long maxSizeInMB) {
     super(STATISTIC_NAME);
-    this.maxSizeInMB = maxSizeInMB;
+    this.setMaxSizeInMB(maxSizeInMB);
   }
 
   public void setMaxSizeInMB(Long maxSizeInMB) {
-    this.maxSizeInMB = maxSizeInMB;
+    this.maxSizeInMB.set(maxSizeInMB);
   }
 
   @Override
@@ -41,7 +41,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     DirectoryNode directoryNode = listWithRootElementAsFirstIndex.get(0);
     Long rootSize = directoryNode.getSize();
     double rootSizeInMB = convertToMB(rootSize);
-    double percentageSize = rootSizeInMB / maxSizeInMB;
+    double percentageSize = rootSizeInMB / maxSizeInMB.getValue();
     long roundedPercentage = Math.round(percentageSize * 100);
     setContent(String.valueOf(roundedPercentage));
     checkForNotifications(roundedPercentage);
@@ -59,10 +59,10 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
   }
 
   private PieChart.Data prepareFreeSpaceData() {
-    PieChart.Data free = new PieChart.Data("Free", maxSizeInMB);
+    PieChart.Data free = new PieChart.Data("Free", maxSizeInMB.getValue());
     free.pieValueProperty().bind(freeSpaceProperty);
     LongBinding longBinding = Bindings.createLongBinding(
-      () -> Math.round(freeSpaceProperty.get() / maxSizeInMB * 100),
+      () -> Math.round(freeSpaceProperty.get() / maxSizeInMB.getValue() * 100),
       freeSpaceProperty);
     free.nameProperty().bind(Bindings.concat(free.getName(), " ", longBinding, " %"));
     return free;
@@ -77,15 +77,15 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   private void checkForNotifications(long percentageUsage) {
     if (percentageUsage >= 100) {
-      new ReachMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
+      new ReachMaxSizeDirectoryNotification(maxSizeInMB.getValue() * percentageUsage / 100, maxSizeInMB.getValue()).show();
     } else if (percentageUsage >= AlmostMaxSizeDirectoryNotification.ALMOST_MAX_SIZE) {
-      new AlmostMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
+      new AlmostMaxSizeDirectoryNotification(maxSizeInMB.getValue() * percentageUsage / 100, maxSizeInMB.getValue()).show();
     }
   }
 
   private void setChartContent(double rootSizeInMB) {
-    if (rootSizeInMB < maxSizeInMB) {
-      this.freeSpaceProperty.set(maxSizeInMB - rootSizeInMB);
+    if (rootSizeInMB < maxSizeInMB.getValue()) {
+      this.freeSpaceProperty.set(maxSizeInMB.getValue() - rootSizeInMB);
       this.usedSpaceProperty.set(rootSizeInMB);
     } else {
       this.freeSpaceProperty.set(0);
