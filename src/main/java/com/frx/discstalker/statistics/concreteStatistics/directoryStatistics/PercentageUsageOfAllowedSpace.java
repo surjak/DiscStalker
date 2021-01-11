@@ -1,8 +1,7 @@
 package com.frx.discstalker.statistics.concreteStatistics.directoryStatistics;
 
 import com.frx.discstalker.model.DirectoryNode;
-import com.frx.discstalker.service.notification.maxsize.AlmostMaxSizeDirectoryNotification;
-import com.frx.discstalker.service.notification.maxsize.ReachMaxSizeDirectoryNotification;
+import com.frx.discstalker.service.notification.maxsize.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -24,7 +23,7 @@ import java.util.List;
 public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
 
   private static final String STATISTIC_NAME = "Percentage usage of allowed space";
-  private final static Long DEFAULT_MAX_DIRECTORY_SIZE = 2000000L;
+  public final static Long DEFAULT_MAX_DIRECTORY_SIZE = 2000000L;
   private final SimpleDoubleProperty freeSpaceProperty = new SimpleDoubleProperty(1);
   private final SimpleDoubleProperty usedSpaceProperty = new SimpleDoubleProperty(0);
   private final SimpleLongProperty maxSizeInMB = new SimpleLongProperty(DEFAULT_MAX_DIRECTORY_SIZE);

@@ -5,7 +5,6 @@ import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
-import com.frx.discstalker.statistics.Statistic;
 import com.frx.discstalker.statistics.StatisticsProvider;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
 import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.FileStatisticsCalculator;
@@ -40,6 +39,10 @@ public class LiveDirectoryController {
 
   public void setPath(String path) {
     this.path = Paths.get(path);
+  }
+
+  public StatisticsController getStatisticsController() {
+    return statisticsController;
   }
 
   public String getPathString() {
@@ -83,10 +86,6 @@ public class LiveDirectoryController {
     setDeleteMenuItemHandler(row, deleteMenuItem);
 
     return row;
-  }
-
-  public Optional<Statistic> findConcreteStatistic(Class<? extends Statistic> statisticName) {
-    return statisticsController.getStatisticsProvider().findConcreteStatisticBy(statisticName);
   }
 
   private void setDeleteMenuItemHandler(TreeTableRow<IFileSystemNode> row, MenuItem deleteMenuItem) {

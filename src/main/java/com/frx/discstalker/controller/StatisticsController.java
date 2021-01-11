@@ -20,6 +20,10 @@ public class StatisticsController {
 
   private StatisticsProvider statisticsProvider;
 
+  public NotificationController getNotificationController() {
+    return notificationController;
+  }
+
   @FXML
   public void initialize() {
     statisticTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);

@@ -2,11 +2,9 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.model.FileInfo;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
+import com.frx.discstalker.utils.FileInfoUtil;
 import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
@@ -17,9 +15,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-import java.io.*;
-import java.lang.reflect.Type;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by nazkord on 09.12.2020
@@ -29,6 +31,7 @@ public class DirectoryTabsController {
   private final static String DIRECTORY_VIEW_FXML = "/view/liveDirectoryView.fxml";
   private final ViewLoader viewLoader;
   private final FileUtil fileUtil;
+  private final FileInfoUtil fileInfoUtil;
   /*
    * This map tracks opened tabs and allows to withdraw specific information
    * (e.g. size quota) to serialize them in handleSaveAction().
@@ -44,9 +47,10 @@ public class DirectoryTabsController {
   Button loadButton;
 
   @Inject
-  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil) {
+  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil, FileInfoUtil fileInfoUtil) {
     this.viewLoader = viewLoader;
     this.fileUtil = fileUtil;
+    this.fileInfoUtil = fileInfoUtil;
   }
 
   @FXML
@@ -57,25 +61,8 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleSaveAction(ActionEvent event) {
-    List<FileInfo> fileInfos = new ArrayList<>();
-    for (LiveDirectoryController controller : tabControllers.values()) {
-      String tabPath = controller.getPathString();
-      Long maxSize = controller
-        .findConcreteStatistic(PercentageUsageOfAllowedSpace.class)
-        .map(PercentageUsageOfAllowedSpace.class::cast)
-        .map(PercentageUsageOfAllowedSpace::getMaxSizeInMB)
-        .orElse(0L);
-      fileInfos.add(new FileInfo(tabPath, maxSize, true));
-    }
-
-    fileUtil.chooseSaveFilePath().ifPresent(file -> {
-      try (var writer = new FileWriter(file)) {
-        var gson = new GsonBuilder().setPrettyPrinting().create();
-        gson.toJson(fileInfos, writer);
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    });
+    List<FileInfo> fileInfos = fileInfoUtil.getFileInfosFrom(tabControllers.values());
+    fileUtil.chooseSaveFilePath().ifPresent(file -> fileInfoUtil.writeFileInfosTo(fileInfos, file));
   }
 
   @FXML
@@ -83,11 +70,9 @@ public class DirectoryTabsController {
     fileUtil.chooseFileFromFS()
       .ifPresentOrElse(file -> {
         try {
-          readFileInfosFromJson(file)
-            .stream()
-            .map(FileInfo::getPath)
-            .map(File::new)
-            .forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
+          Collection<FileInfo> fileInfos = fileInfoUtil.readFileInfosFromJson(file);
+          loadTabsFrom(fileInfos);
+          loadStatsFrom(fileInfos);
         } catch (FileNotFoundException e) {
           System.out.println("User configuration file " + file.toString() + " not found");
         }
@@ -95,11 +80,23 @@ public class DirectoryTabsController {
       });
   }
 
-  private Collection<FileInfo> readFileInfosFromJson(File file) throws FileNotFoundException {
-    BufferedReader br = new BufferedReader(new FileReader(file));
-    Type listType = new TypeToken<Collection<FileInfo>>() {
-    }.getType();
-    return new Gson().fromJson(br, listType);
+  private void loadStatsFrom(Collection<FileInfo> fileInfos) {
+    for (Tab tab : tabControllers.keySet()) {
+      long maxSize = fileInfos.stream()
+        .filter(fileInfo -> fileInfo.getPath().equals(tab.getText()))
+        .findFirst()
+        .map(FileInfo::getSize)
+        .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
+      tabControllers.get(tab).getStatisticsController().getNotificationController().setNewMaximumSize(maxSize);
+    }
+  }
+
+  private void loadTabsFrom(Collection<FileInfo> fileInfos) {
+    fileInfos
+      .stream()
+      .map(FileInfo::getPath)
+      .map(File::new)
+      .forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
   }
 
   @FXML
