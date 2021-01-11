@@ -79,6 +79,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     );
     PieChart pieChart = new PieChart();
     pieChart.dataProperty().setValue(pieChartData);
+    pieChart.setAnimated(false);
     return new VBox(label, pieChart);
   }
 

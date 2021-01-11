@@ -88,6 +88,7 @@ public class NumberOfFiles extends BaseFilesStatistic {
     series.dataProperty().setValue(chartData);
 
     BarChart<String, Number> barChart = createBarChart(xAxis, yAxis, series);
+    barChart.setAnimated(false);
     scrollPane.setContent(barChart);
 
     return scrollPane;
