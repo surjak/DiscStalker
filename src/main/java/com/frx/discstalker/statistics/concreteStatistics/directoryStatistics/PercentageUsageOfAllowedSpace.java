@@ -30,7 +30,6 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
   public PercentageUsageOfAllowedSpace(Long maxSizeInMB) {
     super(STATISTIC_NAME);
     this.maxSizeInMB = maxSizeInMB;
-    addListeners();
   }
 
   public void setMaxSizeInMB(Long maxSizeInMB) {
@@ -43,8 +42,9 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     Long rootSize = directoryNode.getSize();
     double rootSizeInMB = convertToMB(rootSize);
     double percentageSize = rootSizeInMB / maxSizeInMB;
-    double roundedPercentage = Math.round(percentageSize * 100);
+    long roundedPercentage = Math.round(percentageSize * 100);
     setContent(String.valueOf(roundedPercentage));
+    checkForNotifications(roundedPercentage);
     setChartContent(rootSizeInMB);
   }
 
@@ -75,16 +75,12 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     return used;
   }
 
-  private void addListeners() {
-    getValue().addListener((observable, oldValue, newValue) -> {
-      long percentageUsage = Math.round(Double.parseDouble(newValue.toString()));
-      if (percentageUsage > AlmostMaxSizeDirectoryNotification.ALMOST_MAX_SIZE) {
-        new AlmostMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
-      }
-      if (percentageUsage > 100) {
-        new ReachMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
-      }
-    });
+  private void checkForNotifications(long percentageUsage) {
+    if (percentageUsage >= 100) {
+      new ReachMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
+    } else if (percentageUsage >= AlmostMaxSizeDirectoryNotification.ALMOST_MAX_SIZE) {
+      new AlmostMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
+    }
   }
 
   private void setChartContent(double rootSizeInMB) {
