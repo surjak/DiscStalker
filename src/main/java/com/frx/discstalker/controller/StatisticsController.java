@@ -2,7 +2,8 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.statistics.StatisticsProvider;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 
 import java.util.Objects;
 
@@ -20,8 +21,12 @@ public class StatisticsController {
   private StatisticsProvider statisticsProvider;
 
   @FXML
-  public void initialize(){
+  public void initialize() {
     statisticTabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
+  }
+
+  public StatisticsProvider getStatisticsProvider() {
+    return statisticsProvider;
   }
 
   public void registerStatisticModel(StatisticsProvider statisticsProvider) {
@@ -30,11 +35,7 @@ public class StatisticsController {
 
     statisticsProvider
       .getStatisticList()
-      .stream()
-      .forEach(statistic -> {
-        Tab tab = new Tab(statistic.getName().get(), statistic.getValueAsNode());
-        statisticTabs.getTabs().add(tab);
-      });
+      .forEach(statistic -> statisticTabs.getTabs().add(new Tab(statistic.getName().get(), statistic.getValueAsNode())));
 
     notificationController.registerStatisticModel(statisticsProvider);
   }

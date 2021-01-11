@@ -1,5 +1,7 @@
 package com.frx.discstalker.controller;
 
+import com.frx.discstalker.model.FileInfo;
+import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
 import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;
 import com.google.gson.Gson;
@@ -17,11 +19,7 @@ import javafx.scene.control.TabPane;
 
 import java.io.*;
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Created by nazkord on 09.12.2020
@@ -29,27 +27,21 @@ import java.util.stream.Collectors;
 public class DirectoryTabsController {
 
   private final static String DIRECTORY_VIEW_FXML = "/view/liveDirectoryView.fxml";
-
-  @FXML
-  TabPane directoriesTabPane;
-
-  @FXML
-  Button addButton;
-
-  @FXML
-  Button saveButton;
-
-  @FXML
-  Button loadButton;
-
   private final ViewLoader viewLoader;
   private final FileUtil fileUtil;
-
   /*
-  * This map tracks opened tabs and allows to withdraw specific information
-  * (e.g. size quota) to serialize them in handleSaveAction().
-  */
+   * This map tracks opened tabs and allows to withdraw specific information
+   * (e.g. size quota) to serialize them in handleSaveAction().
+   */
   private final HashMap<Tab, LiveDirectoryController> tabControllers = new HashMap<>();
+  @FXML
+  TabPane directoriesTabPane;
+  @FXML
+  Button addButton;
+  @FXML
+  Button saveButton;
+  @FXML
+  Button loadButton;
 
   @Inject
   public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil) {
@@ -65,16 +57,21 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleSaveAction(ActionEvent event) {
-    List<String> tabPaths = tabControllers
-      .values()
-      .stream()
-      .map(LiveDirectoryController::getPathString)
-      .collect(Collectors.toList());
+    List<FileInfo> fileInfos = new ArrayList<>();
+    for (LiveDirectoryController controller : tabControllers.values()) {
+      String tabPath = controller.getPathString();
+      Long maxSize = controller
+        .findConcreteStatistic(PercentageUsageOfAllowedSpace.class)
+        .map(PercentageUsageOfAllowedSpace.class::cast)
+        .map(PercentageUsageOfAllowedSpace::getMaxSizeInMB)
+        .orElse(0L);
+      fileInfos.add(new FileInfo(tabPath, maxSize, true));
+    }
 
     fileUtil.chooseSaveFilePath().ifPresent(file -> {
-      try (final var writer = new FileWriter(file)) {
-        final var gson = new GsonBuilder().setPrettyPrinting().create();
-        gson.toJson(tabPaths, writer);
+      try (var writer = new FileWriter(file)) {
+        var gson = new GsonBuilder().setPrettyPrinting().create();
+        gson.toJson(fileInfos, writer);
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -83,19 +80,26 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleLoadAction() {
-    Optional<File> file = fileUtil.chooseFileFromFS();
-    if (file.isEmpty()) return;
+    fileUtil.chooseFileFromFS()
+      .ifPresentOrElse(file -> {
+        try {
+          readFileInfosFromJson(file)
+            .stream()
+            .map(FileInfo::getPath)
+            .map(File::new)
+            .forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
+        } catch (FileNotFoundException e) {
+          System.out.println("User configuration file " + file.toString() + " not found");
+        }
+      }, () -> {
+      });
+  }
 
-    try {
-      BufferedReader br = new BufferedReader(new FileReader(file.get()));
-
-      Type typeOfT = new TypeToken<Collection<String>>(){}.getType();
-      Collection<String> tabPaths = new Gson().fromJson(br, typeOfT);
-
-      tabPaths.stream().map(File::new).forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
-    } catch (FileNotFoundException e) {
-      System.out.println("User configuration file " + file.get().toString() + " not found");
-    }
+  private Collection<FileInfo> readFileInfosFromJson(File file) throws FileNotFoundException {
+    BufferedReader br = new BufferedReader(new FileReader(file));
+    Type listType = new TypeToken<Collection<FileInfo>>() {
+    }.getType();
+    return new Gson().fromJson(br, listType);
   }
 
   @FXML

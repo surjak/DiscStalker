@@ -42,6 +42,10 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     this.maxSizeInMB.set(maxSizeInMB);
   }
 
+  public long getMaxSizeInMB() {
+    return maxSizeInMB.get();
+  }
+
   @Override
   public void calculateValue(List<DirectoryNode> listWithRootElementAsFirstIndex) {
     DirectoryNode directoryNode = listWithRootElementAsFirstIndex.get(0);
