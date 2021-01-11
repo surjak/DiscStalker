@@ -63,8 +63,6 @@ class StatisticsProviderTest {
     statisticsProvider.registerCalculator(newStatisticCalculator);
 
     //then
-    assertThat(statisticsProvider.getStatisticList()).hasSameSizeAs(statisticList);
-    assertThat(statisticsProvider.getStatisticList()).doesNotContain(oldDirectoryStatistics);
-    assertThat(statisticsProvider.getStatisticList()).containsOnly(newDirectoryStatistics);
+    assertThat(statisticsProvider.getStatisticList()).contains(oldDirectoryStatistics, newDirectoryStatistics);
   }
 }
