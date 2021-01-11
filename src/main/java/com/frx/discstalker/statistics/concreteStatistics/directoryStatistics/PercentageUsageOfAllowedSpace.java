@@ -6,9 +6,15 @@ import com.frx.discstalker.service.notification.maxsize.ReachMaxSizeDirectoryNot
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 import java.util.List;
 
@@ -55,7 +61,17 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
       prepareUsedSpaceData()
     ));
     pieChart.setAnimated(false);
-    return pieChart;
+    return new VBox(createTitle(), pieChart);
+  }
+
+  private Label createTitle() {
+    Label label = new Label();
+    label.textProperty().bind(Bindings.concat("Alert for maximum size was set to ", maxSizeInMB, " MB"));
+    label.setAlignment(Pos.CENTER);
+    label.setMaxWidth(Double.MAX_VALUE);
+    label.setFont(new Font("Arial", 14));
+    label.setPadding(new Insets(10,0,0,0));
+    return label;
   }
 
   private PieChart.Data prepareFreeSpaceData() {
