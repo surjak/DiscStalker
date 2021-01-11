@@ -11,11 +11,9 @@
   minHeight="550.0" minWidth="600.0"
 >
   <top>
-  <VBox>
-    <children>
-      <TableView fx:id="tableView" maxWidth="600.0" style="-fx-wrap-text: true"></TableView>
-    </children>
-  </VBox>
+      <TabPane
+        maxWidth="1200.0"
+        fx:id="statisticTabs"/>
   </top>
   <bottom>
     <fx:include source="notificationView.fxml" fx:id="notification"/>

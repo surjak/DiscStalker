@@ -22,9 +22,9 @@ class FileSizeTest {
     FileNode fileNode2 = mock(FileNode.class);
 
     //when
-    when(fileNode1.getMimeType()).thenReturn("text/plain");
+    when(fileNode1.getExtension()).thenReturn("text/plain");
     when(fileNode1.getSize()).thenReturn(10L);
-    when(fileNode2.getMimeType()).thenReturn("text/pdf");
+    when(fileNode2.getExtension()).thenReturn("text/pdf");
     when(fileNode2.getSize()).thenReturn(20L);
     fileSizeStatistic.calculateValue(List.of(fileNode1, fileNode2));
 
@@ -40,9 +40,9 @@ class FileSizeTest {
     FileNode fileNode2 = mock(FileNode.class);
 
     //when
-    when(fileNode1.getMimeType()).thenReturn("text/plain");
+    when(fileNode1.getExtension()).thenReturn("text/plain");
     when(fileNode1.getSize()).thenReturn(10L);
-    when(fileNode2.getMimeType()).thenReturn("text/plain");
+    when(fileNode2.getExtension()).thenReturn("text/plain");
     when(fileNode2.getSize()).thenReturn(20L);
     fileSizeStatistic.calculateValue(List.of(fileNode1, fileNode2));
 

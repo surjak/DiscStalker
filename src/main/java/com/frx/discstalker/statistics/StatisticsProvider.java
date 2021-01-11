@@ -8,7 +8,9 @@ import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,6 +32,12 @@ public class StatisticsProvider {
     return statisticList;
   }
 
+  public Optional<Statistic> findConcreteStatisticBy(Class<? extends Statistic> concreteStatisticName) {
+    return statisticList.stream()
+      .filter(statistic -> statistic.getClass().equals(concreteStatisticName))
+      .findFirst();
+  }
+
   private void bufferEventsFor5SecondsAndRecalculateStatsIfEventOccurred(LiveDirectoryTree directoryTree) {
     directoryTree.getEventSubject()
       .toFlowable(BackpressureStrategy.LATEST)
@@ -41,7 +49,6 @@ public class StatisticsProvider {
   }
 
   public void registerCalculator(StatisticCalculator statisticCalculator) {
-    unregisterCalculator(statisticCalculator);
     calculators.add(statisticCalculator);
     fillStatisticsListWith(statisticCalculator);
     calculateStatisticsFor(statisticCalculator);
@@ -49,24 +56,6 @@ public class StatisticsProvider {
 
   public void registerCalculators(List<StatisticCalculator> statisticCalculators) {
     statisticCalculators.forEach(this::registerCalculator);
-  }
-
-  private void unregisterCalculator(StatisticCalculator statisticCalculator) {
-    findConcreteStatisticCalculatorBy(statisticCalculator.getClass())
-      .map(calculator -> {
-        unregisterStatisticsFrom(calculator);
-        return calculators.remove(calculator);
-      });
-  }
-
-  private Optional<StatisticCalculator> findConcreteStatisticCalculatorBy(Class<? extends StatisticCalculator> statisticCalculator) {
-    return calculators.stream()
-      .filter(calculator -> statisticCalculator.isAssignableFrom(calculator.getClass()))
-      .findFirst();
-  }
-
-  private void unregisterStatisticsFrom(StatisticCalculator statisticCalculator) {
-    statisticList.removeAll(statisticCalculator.getStatistics());
   }
 
   private void fillStatisticsListWith(StatisticCalculator statisticCalculator) {
@@ -77,7 +66,7 @@ public class StatisticsProvider {
     statisticCalculator.calculate(directoryTree.getRoot());
   }
 
-  private void calculateStatistics() {
+  public void calculateStatistics() {
     calculators.forEach(this::calculateStatisticsFor);
   }
 }

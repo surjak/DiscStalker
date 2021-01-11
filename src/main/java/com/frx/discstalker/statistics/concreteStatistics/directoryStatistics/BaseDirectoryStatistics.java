@@ -10,17 +10,17 @@ import javafx.beans.property.StringProperty;
  */
 public abstract class BaseDirectoryStatistics implements DirectoryStatistics {
 
-  private final String statisticName;
-  private SimpleObjectProperty content;
+  private final String STATISTIC_NAME;
+  private ObjectProperty content;
 
   public BaseDirectoryStatistics(String statisticName) {
     this.content = new SimpleObjectProperty("");
-    this.statisticName = statisticName;
+    this.STATISTIC_NAME = statisticName;
   }
 
   @Override
   public StringProperty getName() {
-    return new SimpleStringProperty(statisticName);
+    return new SimpleStringProperty(STATISTIC_NAME);
   }
 
   @Override
@@ -28,7 +28,7 @@ public abstract class BaseDirectoryStatistics implements DirectoryStatistics {
     return content;
   }
 
-  protected void setContent(String content){
-    this.content.set(content);
+  protected void setContent(Object content){
+    this.content.setValue(content);
   }
 }

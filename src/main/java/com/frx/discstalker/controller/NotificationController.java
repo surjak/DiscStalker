@@ -2,9 +2,11 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.service.notification.ErrorNotification;
 import com.frx.discstalker.statistics.StatisticsProvider;
-import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
-import com.google.common.collect.ImmutableList;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,9 +41,9 @@ public class NotificationController {
   @FXML
   private void handleSetAction(ActionEvent event) {
     Long newMaxSizeInMB = getNumericValueFromTextField();
-    statisticsProvider.registerCalculator(
-      new DirectoryStatisticsCalculator(
-        ImmutableList.of(new PercentageUsageOfAllowedSpace(newMaxSizeInMB))));
+    statisticsProvider.findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
+      .ifPresent(statistic -> ((PercentageUsageOfAllowedSpace) statistic).setMaxSizeInMB(newMaxSizeInMB));
+    statisticsProvider.calculateStatistics();
   }
 
   public void registerStatisticModel(StatisticsProvider statisticsProvider) {
@@ -65,6 +67,8 @@ public class NotificationController {
         .show();
       System.out.println("Error parsing int (" + maximumSizeField.getText() + ") from field." + e);
       return 0L;
+    } finally {
+      maximumSizeField.clear();
     }
   }
 }
