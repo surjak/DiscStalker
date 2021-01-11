@@ -14,7 +14,7 @@ public abstract class BaseDirectoryStatistics implements DirectoryStatistics {
   private ObjectProperty content;
 
   public BaseDirectoryStatistics(String statisticName) {
-    this.content = new SimpleObjectProperty();
+    this.content = new SimpleObjectProperty("");
     this.STATISTIC_NAME = statisticName;
   }
 

@@ -3,15 +3,12 @@ package com.frx.discstalker.statistics.concreteStatistics.directoryStatistics;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.service.notification.maxsize.AlmostMaxSizeDirectoryNotification;
 import com.frx.discstalker.service.notification.maxsize.ReachMaxSizeDirectoryNotification;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.LongBinding;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 import java.util.List;
 
@@ -36,40 +33,46 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
     addListeners();
   }
 
+  public void setMaxSizeInMB(Long maxSizeInMB) {
+    this.maxSizeInMB = maxSizeInMB;
+  }
+
   @Override
   public void calculateValue(List<DirectoryNode> listWithRootElementAsFirstIndex) {
     DirectoryNode directoryNode = listWithRootElementAsFirstIndex.get(0);
     Long rootSize = directoryNode.getSize();
     double rootSizeInMB = convertToMB(rootSize);
     double percentageSize = rootSizeInMB / maxSizeInMB;
-    setContent(String.valueOf(percentageSize * 100));
+    double roundedPercentage = Math.round(percentageSize * 100);
+    setContent(String.valueOf(roundedPercentage));
     setChartContent(rootSizeInMB);
   }
 
   @Override
   public Node getValueAsNode() {
-    Label label = new Label();
-    label.textProperty().bind(getValue());
-    label.setAlignment(Pos.CENTER);
-    label.setMaxWidth(Double.MAX_VALUE);
-    label.setFont(new Font("Arial", 20));
-
-    PieChart.Data free = new PieChart.Data("Free", maxSizeInMB);
-    free.pieValueProperty().bind(freeSpaceProperty);
-    PieChart.Data used = new PieChart.Data("Used", 0);
-    used.pieValueProperty().bind(usedSpaceProperty);
-    ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
-      free,
-      used
-    );
-    PieChart pieChart = new PieChart();
-    pieChart.dataProperty().setValue(pieChartData);
+    PieChart pieChart = new PieChart(FXCollections.observableArrayList(
+      prepareFreeSpaceData(),
+      prepareUsedSpaceData()
+    ));
     pieChart.setAnimated(false);
-    return new VBox(label, pieChart);
+    return pieChart;
   }
 
-  public void setMaxSizeInMB(Long maxSizeInMB) {
-    this.maxSizeInMB = maxSizeInMB;
+  private PieChart.Data prepareFreeSpaceData() {
+    PieChart.Data free = new PieChart.Data("Free", maxSizeInMB);
+    free.pieValueProperty().bind(freeSpaceProperty);
+    LongBinding longBinding = Bindings.createLongBinding(
+      () -> Math.round(freeSpaceProperty.get() / maxSizeInMB * 100),
+      freeSpaceProperty);
+    free.nameProperty().bind(Bindings.concat(free.getName(), " ", longBinding, " %"));
+    return free;
+  }
+
+  private PieChart.Data prepareUsedSpaceData() {
+    PieChart.Data used = new PieChart.Data("Used", 0);
+    used.pieValueProperty().bind(usedSpaceProperty);
+    used.nameProperty().bind(Bindings.concat(used.getName(), " ", getValue(), " %"));
+    return used;
   }
 
   private void addListeners() {
