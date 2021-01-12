@@ -1,20 +1,18 @@
 package com.frx.discstalker.model;
 
-public class FileInfo {
+public class TabConfig {
   private String path;
   private long size;
   private boolean isDirectory;
 
-  public FileInfo() {
+  public TabConfig() {
   }
 
-  public FileInfo(String path, long size) {
-    this.path = path;
-    this.size = size;
-    this.isDirectory = false;
+  public TabConfig(String path, long size) {
+    this(path, size, false);
   }
 
-  public FileInfo(String path, long size, boolean isDirectory) {
+  public TabConfig(String path, long size, boolean isDirectory) {
     this.path = path;
     this.size = size;
     this.isDirectory = isDirectory;

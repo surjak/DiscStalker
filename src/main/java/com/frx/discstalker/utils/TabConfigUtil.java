@@ -1,7 +1,7 @@
 package com.frx.discstalker.utils;
 
 import com.frx.discstalker.controller.LiveDirectoryController;
-import com.frx.discstalker.model.FileInfo;
+import com.frx.discstalker.model.TabConfig;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,16 +15,16 @@ import java.util.Collection;
 import java.util.List;
 
 @Singleton
-public class FileInfoUtil {
+public class TabConfigUtil {
 
-  public Collection<FileInfo> readFileInfosFromJson(File file) throws FileNotFoundException {
+  public Collection<TabConfig> readFileInfosFromJson(File file) throws FileNotFoundException {
     BufferedReader br = new BufferedReader(new FileReader(file));
-    Type listType = new TypeToken<Collection<FileInfo>>(){}.getType();
+    Type listType = new TypeToken<Collection<TabConfig>>(){}.getType();
     return new Gson().fromJson(br, listType);
   }
 
-  public List<FileInfo> getFileInfosFrom(Collection<LiveDirectoryController> liveDirectoryControllers) {
-    List<FileInfo> fileInfos = new ArrayList<>();
+  public List<TabConfig> getFileInfosFrom(Collection<LiveDirectoryController> liveDirectoryControllers) {
+    List<TabConfig> tabConfigs = new ArrayList<>();
     for (LiveDirectoryController controller : liveDirectoryControllers) {
       String tabPath = controller.getPathString();
       Long maxSize = controller
@@ -34,15 +34,15 @@ public class FileInfoUtil {
         .map(PercentageUsageOfAllowedSpace.class::cast)
         .map(PercentageUsageOfAllowedSpace::getMaxSizeInMB)
         .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
-      fileInfos.add(new FileInfo(tabPath, maxSize, true));
+      tabConfigs.add(new TabConfig(tabPath, maxSize, true));
     }
-    return fileInfos;
+    return tabConfigs;
   }
 
-  public void writeFileInfosTo(List<FileInfo> fileInfos, File file) {
+  public void writeFileInfosTo(List<TabConfig> tabConfigs, File file) {
       try (var writer = new FileWriter(file)) {
         var gson = new GsonBuilder().setPrettyPrinting().create();
-        gson.toJson(fileInfos, writer);
+        gson.toJson(tabConfigs, writer);
       } catch (IOException ex) {
         ex.printStackTrace();
       }

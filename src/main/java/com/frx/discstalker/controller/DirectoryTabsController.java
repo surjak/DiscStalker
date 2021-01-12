@@ -1,8 +1,9 @@
 package com.frx.discstalker.controller;
 
-import com.frx.discstalker.model.FileInfo;
+import com.frx.discstalker.model.TabConfig;
+import com.frx.discstalker.service.notification.ErrorNotification;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
-import com.frx.discstalker.utils.FileInfoUtil;
+import com.frx.discstalker.utils.TabConfigUtil;
 import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;
 import com.google.inject.Inject;
@@ -31,7 +32,7 @@ public class DirectoryTabsController {
   private final static String DIRECTORY_VIEW_FXML = "/view/liveDirectoryView.fxml";
   private final ViewLoader viewLoader;
   private final FileUtil fileUtil;
-  private final FileInfoUtil fileInfoUtil;
+  private final TabConfigUtil tabConfigUtil;
   /*
    * This map tracks opened tabs and allows to withdraw specific information
    * (e.g. size quota) to serialize them in handleSaveAction().
@@ -47,10 +48,10 @@ public class DirectoryTabsController {
   Button loadButton;
 
   @Inject
-  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil, FileInfoUtil fileInfoUtil) {
+  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil, TabConfigUtil tabConfigUtil) {
     this.viewLoader = viewLoader;
     this.fileUtil = fileUtil;
-    this.fileInfoUtil = fileInfoUtil;
+    this.tabConfigUtil = tabConfigUtil;
   }
 
   @FXML
@@ -61,40 +62,42 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleSaveAction(ActionEvent event) {
-    List<FileInfo> fileInfos = fileInfoUtil.getFileInfosFrom(tabControllers.values());
-    fileUtil.chooseSaveFilePath().ifPresent(file -> fileInfoUtil.writeFileInfosTo(fileInfos, file));
+    List<TabConfig> tabConfigs = tabConfigUtil.getFileInfosFrom(tabControllers.values());
+    fileUtil.chooseSaveFilePath().ifPresent(file -> tabConfigUtil.writeFileInfosTo(tabConfigs, file));
   }
 
   @FXML
   private void handleLoadAction() {
-    fileUtil.chooseFileFromFS()
-      .ifPresentOrElse(file -> {
-        try {
-          Collection<FileInfo> fileInfos = fileInfoUtil.readFileInfosFromJson(file);
-          loadTabsFrom(fileInfos);
-          loadStatsFrom(fileInfos);
-        } catch (FileNotFoundException e) {
-          System.out.println("User configuration file " + file.toString() + " not found");
-        }
-      }, () -> {
-      });
+    fileUtil.chooseFileFromFS().ifPresent(this::loadConfigDataFrom);
   }
 
-  private void loadStatsFrom(Collection<FileInfo> fileInfos) {
+  private void loadConfigDataFrom(File file) {
+    try {
+      Collection<TabConfig> tabConfigs = tabConfigUtil.readFileInfosFromJson(file);
+      loadTabsFrom(tabConfigs);
+      loadStatsFrom(tabConfigs);
+    } catch (FileNotFoundException e) {
+      String errorMessage = "User configuration file " + file.toString() + " not found";
+      new ErrorNotification(errorMessage, "Choose other json file than " + file.toString()).show();
+      System.out.println(errorMessage);
+    }
+  }
+
+  private void loadStatsFrom(Collection<TabConfig> tabConfigs) {
     for (Tab tab : tabControllers.keySet()) {
-      long maxSize = fileInfos.stream()
-        .filter(fileInfo -> fileInfo.getPath().equals(tab.getText()))
+      long maxSize = tabConfigs.stream()
+        .filter(tabConfig -> tabConfig.getPath().equals(tab.getText()))
         .findFirst()
-        .map(FileInfo::getSize)
+        .map(TabConfig::getSize)
         .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
       tabControllers.get(tab).getStatisticsController().getNotificationController().setNewMaximumSize(maxSize);
     }
   }
 
-  private void loadTabsFrom(Collection<FileInfo> fileInfos) {
-    fileInfos
+  private void loadTabsFrom(Collection<TabConfig> tabConfigs) {
+    tabConfigs
       .stream()
-      .map(FileInfo::getPath)
+      .map(TabConfig::getPath)
       .map(File::new)
       .forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
   }
