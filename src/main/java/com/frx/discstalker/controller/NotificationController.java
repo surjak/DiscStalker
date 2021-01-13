@@ -3,10 +3,6 @@ package com.frx.discstalker.controller;
 import com.frx.discstalker.service.notification.ErrorNotification;
 import com.frx.discstalker.statistics.StatisticsProvider;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
-import io.reactivex.rxjava3.core.Flowable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import io.reactivex.rxjavafx.schedulers.JavaFxScheduler;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,7 +16,7 @@ import java.util.Objects;
  */
 public class NotificationController {
 
-  private static final String NOTIFICATION_TITLE = "Maximum size in MB of the chosen directory";
+  private static final String NOTIFICATION_TITLE = "Alert for maximum size in MB of the chosen directory";
   private StatisticsProvider statisticsProvider;
 
   @FXML
@@ -40,9 +36,12 @@ public class NotificationController {
 
   @FXML
   private void handleSetAction(ActionEvent event) {
-    Long newMaxSizeInMB = getNumericValueFromTextField();
+    setNewMaximumSize(getNumericValueFromTextField());
+  }
+
+  public void setNewMaximumSize(long newMaximumSize) {
     statisticsProvider.findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
-      .ifPresent(statistic -> ((PercentageUsageOfAllowedSpace) statistic).setMaxSizeInMB(newMaxSizeInMB));
+      .ifPresent(statistic -> ((PercentageUsageOfAllowedSpace) statistic).setMaxSizeInMB(newMaximumSize));
     statisticsProvider.calculateStatistics();
   }
 

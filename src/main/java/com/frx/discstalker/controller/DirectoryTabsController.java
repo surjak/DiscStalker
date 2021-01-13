@@ -1,10 +1,11 @@
 package com.frx.discstalker.controller;
 
+import com.frx.discstalker.model.TabConfig;
+import com.frx.discstalker.service.notification.ErrorNotification;
+import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
+import com.frx.discstalker.utils.TabConfigUtil;
 import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.google.inject.Inject;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
@@ -15,13 +16,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by nazkord on 09.12.2020
@@ -29,32 +30,28 @@ import java.util.stream.Collectors;
 public class DirectoryTabsController {
 
   private final static String DIRECTORY_VIEW_FXML = "/view/liveDirectoryView.fxml";
-
+  private final ViewLoader viewLoader;
+  private final FileUtil fileUtil;
+  private final TabConfigUtil tabConfigUtil;
+  /*
+   * This map tracks opened tabs and allows to withdraw specific information
+   * (e.g. size quota) to serialize them in handleSaveAction().
+   */
+  private final HashMap<Tab, LiveDirectoryController> tabControllers = new HashMap<>();
   @FXML
   TabPane directoriesTabPane;
-
   @FXML
   Button addButton;
-
   @FXML
   Button saveButton;
-
   @FXML
   Button loadButton;
 
-  private final ViewLoader viewLoader;
-  private final FileUtil fileUtil;
-
-  /*
-  * This map tracks opened tabs and allows to withdraw specific information
-  * (e.g. size quota) to serialize them in handleSaveAction().
-  */
-  private final HashMap<Tab, LiveDirectoryController> tabControllers = new HashMap<>();
-
   @Inject
-  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil) {
+  public DirectoryTabsController(ViewLoader viewLoader, FileUtil fileUtil, TabConfigUtil tabConfigUtil) {
     this.viewLoader = viewLoader;
     this.fileUtil = fileUtil;
+    this.tabConfigUtil = tabConfigUtil;
   }
 
   @FXML
@@ -65,37 +62,44 @@ public class DirectoryTabsController {
 
   @FXML
   private void handleSaveAction(ActionEvent event) {
-    List<String> tabPaths = tabControllers
-      .values()
-      .stream()
-      .map(LiveDirectoryController::getPathString)
-      .collect(Collectors.toList());
-
-    fileUtil.chooseSaveFilePath().ifPresent(file -> {
-      try (final var writer = new FileWriter(file)) {
-        final var gson = new GsonBuilder().setPrettyPrinting().create();
-        gson.toJson(tabPaths, writer);
-      } catch (IOException ex) {
-        ex.printStackTrace();
-      }
-    });
+    List<TabConfig> tabConfigs = tabConfigUtil.getFileInfosFrom(tabControllers.values());
+    fileUtil.chooseSaveFilePath().ifPresent(file -> tabConfigUtil.writeFileInfosTo(tabConfigs, file));
   }
 
   @FXML
   private void handleLoadAction() {
-    Optional<File> file = fileUtil.chooseFileFromFS();
-    if (file.isEmpty()) return;
+    fileUtil.chooseFileFromFS().ifPresent(this::loadConfigDataFrom);
+  }
 
+  private void loadConfigDataFrom(File file) {
     try {
-      BufferedReader br = new BufferedReader(new FileReader(file.get()));
-
-      Type typeOfT = new TypeToken<Collection<String>>(){}.getType();
-      Collection<String> tabPaths = new Gson().fromJson(br, typeOfT);
-
-      tabPaths.stream().map(File::new).forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
+      Collection<TabConfig> tabConfigs = tabConfigUtil.readFileInfosFromJson(file);
+      loadTabsFrom(tabConfigs);
+      loadStatsFrom(tabConfigs);
     } catch (FileNotFoundException e) {
-      System.out.println("User configuration file " + file.get().toString() + " not found");
+      String errorMessage = "User configuration file " + file.toString() + " not found";
+      new ErrorNotification(errorMessage, "Choose other json file than " + file.toString()).show();
+      System.out.println(errorMessage);
     }
+  }
+
+  private void loadStatsFrom(Collection<TabConfig> tabConfigs) {
+    for (Tab tab : tabControllers.keySet()) {
+      long maxSize = tabConfigs.stream()
+        .filter(tabConfig -> tabConfig.getPath().equals(tab.getText()))
+        .findFirst()
+        .map(TabConfig::getSize)
+        .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
+      tabControllers.get(tab).getStatisticsController().getNotificationController().setNewMaximumSize(maxSize);
+    }
+  }
+
+  private void loadTabsFrom(Collection<TabConfig> tabConfigs) {
+    tabConfigs
+      .stream()
+      .map(TabConfig::getPath)
+      .map(File::new)
+      .forEach(this::createAndDisplayNewTabWithLiveDirectoryTree);
   }
 
   @FXML

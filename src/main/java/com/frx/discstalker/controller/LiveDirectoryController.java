@@ -41,6 +41,10 @@ public class LiveDirectoryController {
     this.path = Paths.get(path);
   }
 
+  public StatisticsController getStatisticsController() {
+    return statisticsController;
+  }
+
   public String getPathString() {
     return this.path.toString();
   }
@@ -112,9 +116,7 @@ public class LiveDirectoryController {
     if (node.isDirectory()) {
       final var directoryNode = (DirectoryNode) node;
 
-      directoryNode.getChildNodes().forEach(child -> {
-        addNodeToTree(treeItem, child);
-      });
+      directoryNode.getChildNodes().forEach(child -> addNodeToTree(treeItem, child));
 
       JavaFxObservable.changesOf(directoryNode.getChildNodes())
         .subscribe(event -> {
