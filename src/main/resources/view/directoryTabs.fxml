@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<AnchorPane
+  xmlns="http://javafx.com/javafx"
+  xmlns:fx="http://javafx.com/fxml"
+  fx:controller="com.frx.discstalker.controller.DirectoryTabsController"
+  prefHeight="600.0" prefWidth="1200.0"
+  minHeight="600.0" minWidth="1200.0">
+  <TabPane
+    maxWidth="1200.0"
+    fx:id="directoriesTabPane"/>
+  <VBox AnchorPane.topAnchor="2.5" AnchorPane.rightAnchor="5.0" spacing="4.0" alignment="BASELINE_RIGHT">
+    <Button
+      fx:id="addButton"
+      onAction="#handleAddAction"
+      text="add"/>
+    <Button
+      fx:id="saveButton"
+      onAction="#handleSaveAction"
+      text="save"/>
+    <Button
+      fx:id="loadButton"
+      onAction="#handleLoadAction"
+      text="load"/>
+  </VBox>
+</AnchorPane>
