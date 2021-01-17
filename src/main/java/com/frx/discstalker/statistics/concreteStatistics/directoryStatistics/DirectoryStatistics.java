@@ -8,6 +8,6 @@ import java.util.List;
 /**
  * Created by surjak on 20.12.2020
  */
-public interface DirectoryStatistics extends Statistic {
+public interface DirectoryStatistics<T> extends Statistic<T> {
   void calculateValue(List<DirectoryNode> directoryNodes);
 }

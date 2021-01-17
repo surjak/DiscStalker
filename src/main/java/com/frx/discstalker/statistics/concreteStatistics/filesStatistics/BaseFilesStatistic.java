@@ -8,7 +8,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by surjak on 19.12.2020
  */
-public abstract class BaseFilesStatistic implements FilesStatistic {
+public abstract class BaseFilesStatistic<T> implements FilesStatistic<T> {
   private final String STATISTIC_NAME;
   private StringProperty content;
 

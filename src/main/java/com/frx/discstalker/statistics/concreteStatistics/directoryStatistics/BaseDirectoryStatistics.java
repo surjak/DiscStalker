@@ -8,7 +8,7 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by surjak on 20.12.2020
  */
-public abstract class BaseDirectoryStatistics implements DirectoryStatistics {
+public abstract class BaseDirectoryStatistics<T> implements DirectoryStatistics<T> {
 
   private final String STATISTIC_NAME;
   private StringProperty content;
