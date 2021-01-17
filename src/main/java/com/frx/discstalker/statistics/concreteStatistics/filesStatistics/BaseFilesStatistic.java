@@ -10,10 +10,10 @@ import javafx.beans.property.StringProperty;
  */
 public abstract class BaseFilesStatistic implements FilesStatistic {
   private final String STATISTIC_NAME;
-  private SimpleObjectProperty content;
+  private StringProperty content;
 
   public BaseFilesStatistic(String statisticName) {
-    this.content = new SimpleObjectProperty("");
+    this.content = new SimpleStringProperty("");
     this.STATISTIC_NAME = statisticName;
   }
 
@@ -23,7 +23,7 @@ public abstract class BaseFilesStatistic implements FilesStatistic {
   }
 
   @Override
-  public ObjectProperty getValue() {
+  public StringProperty getTextValue() {
     return content;
   }
 

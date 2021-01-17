@@ -9,6 +9,6 @@ import javafx.scene.Node;
  */
 public interface Statistic {
   StringProperty getName();
-  ObjectProperty getValue();
+  StringProperty getTextValue();
   Node getValueAsNode();
 }

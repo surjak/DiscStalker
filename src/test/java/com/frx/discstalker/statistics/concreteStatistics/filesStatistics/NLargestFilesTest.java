@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +23,7 @@ class NLargestFilesTest {
     nLargestFilesTest.calculateValue(nodes);
 
     //then
-    assertThat(nLargestFilesTest.getValue().getValue().toString()).isEqualTo("fileNode4 : 42\nfileNode3 : 32\nfileNode2 : 22\n");
+    assertThat(nLargestFilesTest.getTextValue().getValue().toString()).isEqualTo("fileNode4 : 42\nfileNode3 : 32\nfileNode2 : 22\n");
   }
 
   @Test
@@ -35,7 +34,7 @@ class NLargestFilesTest {
     nLargestFilesTest.calculateValue(nodes);
 
     //then
-    assertThat(nLargestFilesTest.getValue().getValue().toString()).isEqualTo("fileNode4 : 42\nfileNode3 : 32\n");
+    assertThat(nLargestFilesTest.getTextValue().getValue().toString()).isEqualTo("fileNode4 : 42\nfileNode3 : 32\n");
   }
 
   private List<FileNode> createMockedFileNodes() {

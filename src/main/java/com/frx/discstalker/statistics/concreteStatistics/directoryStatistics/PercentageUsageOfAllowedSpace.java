@@ -90,7 +90,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics {
   private PieChart.Data prepareUsedSpaceData() {
     PieChart.Data used = new PieChart.Data("Used", 0);
     used.pieValueProperty().bind(usedSpaceProperty);
-    used.nameProperty().bind(Bindings.concat(used.getName(), " ", getValue(), " %"));
+    used.nameProperty().bind(Bindings.concat(used.getName(), " ", getTextValue(), " %"));
     return used;
   }
 
