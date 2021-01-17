@@ -32,9 +32,10 @@ public class StatisticsProvider {
     return statisticList;
   }
 
-  public Optional<Statistic> findConcreteStatisticBy(Class<? extends Statistic> concreteStatisticName) {
+  public <T extends Statistic> Optional<T> findConcreteStatisticBy(Class<T> concreteStatisticClass) {
     return statisticList.stream()
-      .filter(statistic -> statistic.getClass().equals(concreteStatisticName))
+      .filter(concreteStatisticClass::isInstance)
+      .map(concreteStatisticClass::cast)
       .findFirst();
   }
 

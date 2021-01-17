@@ -60,7 +60,6 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
     int roundedPercentage = (int) Math.round(percentageSize * 100);
     value.set(roundedPercentage);
     setContent(String.valueOf(roundedPercentage));
-    checkForNotifications(roundedPercentage);
     setChartContent(rootSizeInMB);
   }
 
@@ -99,14 +98,6 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
     used.pieValueProperty().bind(usedSpaceProperty);
     used.nameProperty().bind(Bindings.concat(used.getName(), " ", getTextValue(), " %"));
     return used;
-  }
-
-  private void checkForNotifications(long percentageUsage) {
-    if (percentageUsage >= 100) {
-      new ReachMaxSizeDirectoryNotification(maxSizeInMB.getValue() * percentageUsage / 100, maxSizeInMB.getValue()).show();
-    } else if (percentageUsage >= AlmostMaxSizeDirectoryNotification.ALMOST_MAX_SIZE) {
-      new AlmostMaxSizeDirectoryNotification(maxSizeInMB.getValue() * percentageUsage / 100, maxSizeInMB.getValue()).show();
-    }
   }
 
   private void setChartContent(double rootSizeInMB) {

@@ -1,8 +1,11 @@
 package com.frx.discstalker.controller;
 
 import com.frx.discstalker.service.notification.ErrorNotification;
+import com.frx.discstalker.service.notification.maxsize.AlmostMaxSizeDirectoryNotification;
+import com.frx.discstalker.service.notification.maxsize.ReachMaxSizeDirectoryNotification;
 import com.frx.discstalker.statistics.StatisticsProvider;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
+import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -48,6 +51,8 @@ public class NotificationController {
   public void registerStatisticModel(StatisticsProvider statisticsProvider) {
     Objects.requireNonNull(statisticsProvider);
     this.statisticsProvider = statisticsProvider;
+    // Notification observers depend on statistics, so we have to wait for the provider to be registered
+    this.initializeNotifications();
   }
 
   private void setUpOnlyNumericValuesForTextField() {
@@ -68,6 +73,26 @@ public class NotificationController {
       return 0L;
     } finally {
       maximumSizeField.clear();
+    }
+  }
+
+  private void initializeNotifications() {
+    statisticsProvider.findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
+      .ifPresent(statistic -> {
+        JavaFxObservable.valuesOf(statistic.getValue())
+          .subscribe(usage -> {
+            this.checkForNotifications(usage, statistic);
+          });
+      });
+  }
+
+  private void checkForNotifications(int percentageUsage, PercentageUsageOfAllowedSpace statistic) {
+    final var maxSizeInMB = statistic.getMaxSizeInMB();
+
+    if (percentageUsage >= 100) {
+      new ReachMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
+    } else if (percentageUsage >= AlmostMaxSizeDirectoryNotification.ALMOST_MAX_SIZE) {
+      new AlmostMaxSizeDirectoryNotification(maxSizeInMB * percentageUsage / 100, maxSizeInMB).show();
     }
   }
 }
