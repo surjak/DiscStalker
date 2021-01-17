@@ -85,12 +85,15 @@ public class DirectoryTabsController {
 
   private void loadStatsFrom(Collection<TabConfig> tabConfigs) {
     for (Tab tab : tabControllers.keySet()) {
-      long maxSize = tabConfigs.stream()
-        .filter(tabConfig -> tabConfig.getPath().equals(tab.getText()))
+      final var tabConfig = tabConfigs.stream()
+        .filter(config -> config.getPath().equals(tab.getText()))
         .findFirst()
-        .map(TabConfig::getSize)
-        .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
-      tabControllers.get(tab).getStatisticsController().getNotificationController().setNewMaximumSize(maxSize);
+        .orElseThrow();
+
+      final var notificationController = tabControllers.get(tab).getStatisticsController().getNotificationController();
+      notificationController.setNewMaximumSize(tabConfig.getMaximumSize());
+      notificationController.setNewMaximumNumberOfFiles(tabConfig.getMaximumNumberOfFiles());
+      notificationController.setNewMaximumFileSize(tabConfig.getMaximumFileSize());
     }
   }
 

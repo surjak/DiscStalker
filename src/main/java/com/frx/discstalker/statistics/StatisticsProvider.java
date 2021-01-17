@@ -70,4 +70,8 @@ public class StatisticsProvider {
   public void calculateStatistics() {
     calculators.forEach(this::calculateStatisticsFor);
   }
+
+  public LiveDirectoryTree getLiveDirectoryTree() {
+    return directoryTree;
+  }
 }

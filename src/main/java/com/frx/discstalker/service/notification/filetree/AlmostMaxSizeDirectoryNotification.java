@@ -1,4 +1,4 @@
-package com.frx.discstalker.service.notification.maxsize;
+package com.frx.discstalker.service.notification.filetree;
 
 import com.frx.discstalker.service.notification.Notification;
 

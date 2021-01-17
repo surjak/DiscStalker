@@ -1,7 +1,7 @@
 package com.frx.discstalker.statistics.concreteStatistics.directoryStatistics;
 
+import com.frx.discstalker.Utils;
 import com.frx.discstalker.model.DirectoryNode;
-import com.frx.discstalker.service.notification.maxsize.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
 import javafx.beans.property.*;
@@ -15,7 +15,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by surjak on 20.12.2020
@@ -23,7 +22,7 @@ import java.util.Map;
 public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integer> {
 
   private static final String STATISTIC_NAME = "Percentage usage of allowed space";
-  public final static Long DEFAULT_MAX_DIRECTORY_SIZE = 2000000L;
+  public final static Long DEFAULT_MAX_DIRECTORY_SIZE = 100L;
   private final SimpleDoubleProperty freeSpaceProperty = new SimpleDoubleProperty(1);
   private final SimpleDoubleProperty usedSpaceProperty = new SimpleDoubleProperty(0);
   private final SimpleLongProperty maxSizeInMB = new SimpleLongProperty(DEFAULT_MAX_DIRECTORY_SIZE);
@@ -39,9 +38,12 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
   }
 
   public void setMaxSizeInMB(Long maxSizeInMB) {
-    this.maxSizeInMB.set(maxSizeInMB);
+    if (maxSizeInMB != null) {
+      this.maxSizeInMB.set(maxSizeInMB);
+    } else {
+      this.maxSizeInMB.set(DEFAULT_MAX_DIRECTORY_SIZE);
+    }
   }
-
   public long getMaxSizeInMB() {
     return maxSizeInMB.get();
   }
@@ -55,7 +57,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
   public void calculateValue(List<DirectoryNode> listWithRootElementAsFirstIndex) {
     DirectoryNode directoryNode = listWithRootElementAsFirstIndex.get(0);
     Long rootSize = directoryNode.getSize();
-    double rootSizeInMB = convertToMB(rootSize);
+    double rootSizeInMB = Utils.convertToMB(rootSize);
     double percentageSize = rootSizeInMB / maxSizeInMB.getValue();
     int roundedPercentage = (int) Math.round(percentageSize * 100);
     value.set(roundedPercentage);
@@ -75,7 +77,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
 
   private Label createTitle() {
     Label label = new Label();
-    label.textProperty().bind(Bindings.concat("Alert for maximum size was set to ", maxSizeInMB, " MB"));
+    label.textProperty().bind(Bindings.concat("Showing for max size of ", maxSizeInMB, " MB"));
     label.setAlignment(Pos.CENTER);
     label.setMaxWidth(Double.MAX_VALUE);
     label.setFont(new Font("Arial", 14));
@@ -108,9 +110,5 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
       this.freeSpaceProperty.set(0);
       this.usedSpaceProperty.set(1);
     }
-  }
-
-  private double convertToMB(Long rootSize) {
-    return (double) rootSize / (1e6);
   }
 }
