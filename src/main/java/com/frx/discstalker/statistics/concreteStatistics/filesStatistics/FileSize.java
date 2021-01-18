@@ -1,10 +1,13 @@
 package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
+import com.frx.discstalker.Utils;
 import com.frx.discstalker.model.FileNode;
 import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.valueConverters.IntegerStringConverter;
 import com.google.inject.internal.cglib.core.$AbstractClassGenerator;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Side;
@@ -25,7 +28,7 @@ import static java.util.stream.Collectors.summingLong;
 /**
  * Created by surjak on 19.12.2020
  */
-public class FileSize extends BaseFilesStatistic {
+public class FileSize extends BaseFilesStatistic<Map<String, Long>> {
 
   private static final String STATISTIC_NAME = "File size grouped by file type";
   private static final String X_LABEL = "File Type/Extension";
@@ -33,10 +36,15 @@ public class FileSize extends BaseFilesStatistic {
   private DoubleProperty doubleProperty = new SimpleDoubleProperty(400);
   private ObservableList<XYChart.Data<String, Number>> chartData = FXCollections.observableArrayList();
   private ObservableList<String> keys = FXCollections.observableArrayList();
-
+  private ObjectProperty<Map<String, Long>> value = new SimpleObjectProperty<>(Map.of());
 
   public FileSize() {
     super(STATISTIC_NAME);
+  }
+
+  @Override
+  public ObjectProperty<Map<String, Long>> getValue() {
+    return value;
   }
 
   @Override
@@ -60,12 +68,14 @@ public class FileSize extends BaseFilesStatistic {
       .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
       .forEach(stringLongEntry -> {
         keys.add(stringLongEntry.getKey());
-        chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), convertToMB(stringLongEntry.getValue())));
+        chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), Utils.convertToMB(stringLongEntry.getValue())));
         doubleProperty.setValue(chartData.size() * 100);
       });
   }
 
   private void writeIntoValue(Map<String, Long> statisticByType) {
+    value.set(statisticByType);
+
     StringBuffer buffer = new StringBuffer();
     statisticByType.entrySet()
       .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));
@@ -129,9 +139,5 @@ public class FileSize extends BaseFilesStatistic {
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
     scrollPane.fitToWidthProperty();
     return scrollPane;
-  }
-
-  private static double convertToMB(Long sizeInBytes) {
-    return (double) sizeInBytes / (1e6);
   }
 }

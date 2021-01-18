@@ -1,13 +1,13 @@
-package com.frx.discstalker.service.notification.maxsize;
+package com.frx.discstalker.service.notification.filetree;
 
 import com.frx.discstalker.service.notification.Notification;
 
 public class ReachMaxSizeDirectoryNotification extends Notification {
 
-  private static final String TITLE = "The size of directory has reached max size";
+  private static final String TITLE = "Directory max size";
 
   public ReachMaxSizeDirectoryNotification(Long reachedSize, Long maxSize) {
-    super(TITLE, String.format("Current size of you directory is %d, but maximum was set to %d", reachedSize, maxSize));
+    super(TITLE, String.format("Current directory size is %d MB, but maximum was set to %d MB", reachedSize, maxSize));
   }
 
   @Override

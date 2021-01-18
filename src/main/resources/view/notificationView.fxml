@@ -7,21 +7,44 @@
 
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Button?>
-<BorderPane maxHeight="130.0" minWidth="400.0" prefHeight="100.0" prefWidth="400.0"
+<?import javafx.scene.layout.VBox?>
+<BorderPane maxHeight="200.0" minWidth="600.0" prefHeight="200.0" prefWidth="600.0"
             xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.frx.discstalker.controller.NotificationController">
   <top>
     <HBox alignment="CENTER">
       <BorderPane.margin>
-        <Insets top="25.0"/>
+        <Insets top="25.0" bottom="25.0"/>
       </BorderPane.margin>
-      <Text fx:id="notificationTitle"/>
+      <Text text="Notification settings"/>
     </HBox>
   </top>
   <center>
-    <HBox alignment="CENTER">
-      <TextField fx:id="maximumSizeField" promptText="Enter the number of MB"/>
-      <Button fx:id="setButton" mnemonicParsing="false" onAction="#handleSetAction" text="Set"/>
+    <HBox spacing="8" alignment="CENTER">
+      <VBox spacing="8">
+        <Text text="Max directory size"/>
+        <HBox alignment="CENTER">
+          <TextField fx:id="maximumSizeField" promptText="Size in MB"/>
+          <Button mnemonicParsing="false" onAction="#handleSetMaximumSizeClick" text="Set"/>
+        </HBox>
+        <Text fx:id="maximumSizeDescription" text="None"/>
+      </VBox>
+      <VBox spacing="8">
+        <Text text="Max no. files"/>
+        <HBox alignment="CENTER">
+          <TextField fx:id="maximumNumberOfFilesField" promptText="Number"/>
+          <Button mnemonicParsing="false" onAction="#handleSetMaximumNumberOfFilesClick" text="Set"/>
+        </HBox>
+        <Text fx:id="maximumNumberOfFilesDescription" text="None"/>
+      </VBox>
+      <VBox spacing="8">
+        <Text text="Max single file size"/>
+        <HBox alignment="CENTER">
+          <TextField fx:id="maximumFileSizeField" promptText="Size in MB"/>
+          <Button mnemonicParsing="false" onAction="#handleSetMaximumFileSizeClick" text="Set"/>
+        </HBox>
+        <Text fx:id="maximumFileSizeDescription" text="None"/>
+      </VBox>
     </HBox>
   </center>
 </BorderPane>

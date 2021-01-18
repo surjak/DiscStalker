@@ -7,8 +7,9 @@ import javafx.scene.Node;
 /**
  * Created by surjak on 19.12.2020
  */
-public interface Statistic {
+public interface Statistic<T> {
   StringProperty getName();
-  ObjectProperty getValue();
+  StringProperty getTextValue();
   Node getValueAsNode();
+  ObjectProperty<T> getValue();
 }
