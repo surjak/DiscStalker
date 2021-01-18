@@ -5,6 +5,26 @@ Pull Requestach.
 
 ---
 
+###### *18 Stycznia 2021*
+
+* Dodatnie nowych typów powiadomień ([PR #20](https://bitbucket.lab.ki.agh.edu.pl/projects/TO2020/repos/sr-1440-frx/pull-requests/20/overview)).
+
+###### *13 Stycznia 2021*
+
+* Zapis konfiguracji powiadomień do pliku ([PR #19](https://bitbucket.lab.ki.agh.edu.pl/projects/TO2020/repos/sr-1440-frx/pull-requests/19/overview)).
+
+###### *11 Stycznia 2021*
+
+* Rozbudowa statystyk ([PR #18](https://bitbucket.lab.ki.agh.edu.pl/projects/TO2020/repos/sr-1440-frx/pull-requests/18/overview)).
+
+###### *6 Stycznia 2021*
+
+* Dodanie pola na wprowadzanie maksymalnego rozmiaru katalogu ([PR #16](https://bitbucket.lab.ki.agh.edu.pl/projects/TO2020/repos/sr-1440-frx/pull-requests/16/overview)).
+
+###### *6 Stycznia 2021*
+
+* Rozszerzenie dokumentacji o statystyki ([PR #15](https://bitbucket.lab.ki.agh.edu.pl/projects/TO2020/repos/sr-1440-frx/pull-requests/15/overview)).
+
 ###### *3 Stycznia 2021*
 
 * Możliwość serializacji otwartych zakładek do plik ([PR #12](https://bitbucket.lab.ki.agh.edu.pl/projects/TO2020/repos/sr-1440-frx/pull-requests/12/overview)).
