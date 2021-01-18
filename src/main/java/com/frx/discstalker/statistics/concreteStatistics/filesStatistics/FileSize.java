@@ -1,5 +1,6 @@
 package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
+import com.frx.discstalker.Utils;
 import com.frx.discstalker.model.FileNode;
 import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.valueConverters.IntegerStringConverter;
 import com.google.inject.internal.cglib.core.$AbstractClassGenerator;
@@ -67,7 +68,7 @@ public class FileSize extends BaseFilesStatistic<Map<String, Long>> {
       .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
       .forEach(stringLongEntry -> {
         keys.add(stringLongEntry.getKey());
-        chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), convertToMB(stringLongEntry.getValue())));
+        chartData.add(new XYChart.Data<>(stringLongEntry.getKey(), Utils.convertToMB(stringLongEntry.getValue())));
         doubleProperty.setValue(chartData.size() * 100);
       });
   }
@@ -138,9 +139,5 @@ public class FileSize extends BaseFilesStatistic<Map<String, Long>> {
     scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
     scrollPane.fitToWidthProperty();
     return scrollPane;
-  }
-
-  private static double convertToMB(Long sizeInBytes) {
-    return (double) sizeInBytes / (1e6);
   }
 }

@@ -76,13 +76,11 @@ public class NotificationController {
   public void setNewMaximumSize(Long newMaximumSize) {
     this.maximumSize = Optional.ofNullable(newMaximumSize);
 
-    this.maximumSize.ifPresent(maximumSize -> {
+    this.maximumSize.ifPresentOrElse(maximumSize -> {
       statisticsProvider.findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
         .ifPresent(statistic -> statistic.setMaxSizeInMB(maximumSize));
       statisticsProvider.calculateStatistics();
-    });
 
-    this.maximumSize.ifPresentOrElse(maximumSize -> {
       this.maximumSizeDescription.setText("Set to " + maximumSize.toString() + " MB");
     }, () -> {
       this.maximumSizeDescription.setText("None");
@@ -137,6 +135,12 @@ public class NotificationController {
   }
 
   private void initializeNotifications() {
+    initializeMaxDirectorySizeNotifications();
+    initializeMaxNumberOfFilesNotifications();
+    initializeMaxFileSizeNotifications();
+  }
+
+  private void initializeMaxDirectorySizeNotifications() {
     final var root = statisticsProvider.getLiveDirectoryTree().getRoot();
 
     JavaFxObservable.valuesOf(root.getSizeProperty())
@@ -144,14 +148,18 @@ public class NotificationController {
       .map(Utils::convertToMB)
       .throttleLatest(5, TimeUnit.SECONDS)
       .subscribe(this::checkForMaxSizeNotifications);
+  }
+
+  private void initializeMaxNumberOfFilesNotifications() {
+    final var root = statisticsProvider.getLiveDirectoryTree().getRoot();
 
     JavaFxObservable.valuesOf(root.getNumberOfFilesProperty())
       .map(Number::longValue)
       .throttleLatest(5, TimeUnit.SECONDS)
       .subscribe(this::checkForMaxNumberOfFilesNotifications);
+  }
 
-    // Notifications based on statistics
-
+  private void initializeMaxFileSizeNotifications() {
     statisticsProvider.findConcreteStatisticBy(NLargestFiles.class)
       .ifPresent(statistic -> {
         JavaFxObservable.valuesOf(statistic.getValue())

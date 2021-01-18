@@ -6,8 +6,6 @@ public class TabConfig {
   private Long maximumNumberOfFiles;
   private Long maximumFileSize;
 
-  public TabConfig() {}
-
   public TabConfig(String path, Long maximumSize, Long maximumNumberOfFiles, Long maximumFileSize) {
     this.path = path;
     this.maximumSize = maximumSize;
