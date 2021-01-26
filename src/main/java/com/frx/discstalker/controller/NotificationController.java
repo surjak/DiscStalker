@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  * Created by nazkord on 04.01.2021
  */
 public class NotificationController {
+  private static final int NOTIFICATION_THROTTLE_TIMEOUT_SEC = 5;
 
   private StatisticsProvider statisticsProvider;
 
@@ -33,7 +34,7 @@ public class NotificationController {
 
   private Optional<Long> maximumSize = Optional.empty();
 
-  public BooleanProperty isSet = new SimpleBooleanProperty(false);
+  public BooleanProperty isMaximumSizeSet = new SimpleBooleanProperty(false);
 
   @FXML
   private Text maximumSizeDescription;
@@ -77,9 +78,9 @@ public class NotificationController {
     setNewMaximumFileSize(fileSize);
   }
 
-  public void setNewMaximumSize(Long newMaximumSize) {
-    isSet.setValue(true);
-    this.maximumSize = Optional.ofNullable(newMaximumSize);
+  public void setNewMaximumSize(long newMaximumSize) {
+    isMaximumSizeSet.setValue(true);
+    this.maximumSize = Optional.of(newMaximumSize);
 
     this.maximumSize.ifPresentOrElse(maximumSize -> {
       statisticsProvider.findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
@@ -92,8 +93,8 @@ public class NotificationController {
     });
   }
 
-  public void setNewMaximumNumberOfFiles(Long newMaximumNumberOfFiles) {
-    this.maximumNumberOfFiles = Optional.ofNullable(newMaximumNumberOfFiles);
+  public void setNewMaximumNumberOfFiles(long newMaximumNumberOfFiles) {
+    this.maximumNumberOfFiles = Optional.of(newMaximumNumberOfFiles);
 
     this.maximumNumberOfFiles.ifPresentOrElse(numberOfFiles -> {
       this.maximumNumberOfFilesDescription.setText("Set to " + numberOfFiles.toString());
@@ -102,8 +103,8 @@ public class NotificationController {
     });
   }
 
-  public void setNewMaximumFileSize(Long newMaximumFileSize) {
-    this.maximumFileSize = Optional.ofNullable(newMaximumFileSize);
+  public void setNewMaximumFileSize(long newMaximumFileSize) {
+    this.maximumFileSize = Optional.of(newMaximumFileSize);
 
     this.maximumFileSize.ifPresentOrElse(maximumFileSize -> {
       this.maximumFileSizeDescription.setText("Set to " + maximumFileSize.toString() + " MB");
@@ -151,7 +152,7 @@ public class NotificationController {
     JavaFxObservable.valuesOf(root.getSizeProperty())
       .map(Number::longValue)
       .map(Utils::convertToMB)
-      .throttleLatest(5, TimeUnit.SECONDS)
+      .throttleLatest(NOTIFICATION_THROTTLE_TIMEOUT_SEC, TimeUnit.SECONDS)
       .subscribe(this::checkForMaxSizeNotifications);
   }
 
@@ -160,7 +161,7 @@ public class NotificationController {
 
     JavaFxObservable.valuesOf(root.getNumberOfFilesProperty())
       .map(Number::longValue)
-      .throttleLatest(5, TimeUnit.SECONDS)
+      .throttleLatest(NOTIFICATION_THROTTLE_TIMEOUT_SEC, TimeUnit.SECONDS)
       .subscribe(this::checkForMaxNumberOfFilesNotifications);
   }
 

@@ -90,9 +90,9 @@ public class DirectoryTabsController {
         .orElseThrow();
 
       final var notificationController = tabControllers.get(tab).getStatisticsController().getNotificationController();
-      notificationController.setNewMaximumSize(tabConfig.getMaximumSize());
-      notificationController.setNewMaximumNumberOfFiles(tabConfig.getMaximumNumberOfFiles());
-      notificationController.setNewMaximumFileSize(tabConfig.getMaximumFileSize());
+      tabConfig.getMaximumSize().ifPresent(notificationController::setNewMaximumSize);
+      tabConfig.getMaximumNumberOfFiles().ifPresent(notificationController::setNewMaximumNumberOfFiles);
+      tabConfig.getMaximumFileSize().ifPresent(notificationController::setNewMaximumFileSize);
     }
   }
 

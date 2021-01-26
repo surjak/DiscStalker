@@ -47,7 +47,7 @@ public class StatisticsController {
   }
 
   private void addListener() {
-    notificationController.isSet.addListener((observable, oldValue, newValue) -> {
+    notificationController.isMaximumSizeSet.addListener((observable, oldValue, newValue) -> {
       if(newValue) {
         registerCalculator(new DirectoryStatisticsCalculator());
       }

@@ -1,5 +1,7 @@
 package com.frx.discstalker.model;
 
+import java.util.Optional;
+
 public class TabConfig {
   private String path;
   private Long maximumSize;
@@ -17,15 +19,15 @@ public class TabConfig {
     return path;
   }
 
-  public Long getMaximumSize() {
-    return maximumSize;
+  public Optional<Long> getMaximumSize() {
+    return Optional.ofNullable(maximumSize);
   }
 
-  public Long getMaximumNumberOfFiles() {
-    return maximumNumberOfFiles;
+  public Optional<Long> getMaximumNumberOfFiles() {
+    return Optional.ofNullable(maximumNumberOfFiles);
   }
 
-  public Long getMaximumFileSize() {
-    return maximumFileSize;
+  public Optional<Long> getMaximumFileSize() {
+    return Optional.ofNullable(maximumFileSize);
   }
 }
