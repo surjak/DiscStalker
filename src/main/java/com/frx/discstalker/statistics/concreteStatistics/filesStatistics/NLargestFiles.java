@@ -2,20 +2,16 @@ package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.Utils;
 import com.frx.discstalker.model.FileNode;
-import com.frx.discstalker.statistics.Statistic;
-import com.google.common.base.Strings;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -130,7 +126,7 @@ public class NLargestFiles extends BaseFilesStatistic<List<FileNode>> {
       protected void updateItem(FileNode item, boolean empty) {
         super.updateItem(item, empty);
         if (null != item) {
-          setText(item.getPath().toString());
+          setText(item.getPath().toString() + "\n" + Utils.convertToMB(item.getSize()) + " MB ");
         } else {
           setText("");
         }
