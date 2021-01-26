@@ -2,7 +2,6 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.model.TabConfig;
 import com.frx.discstalker.service.notification.ErrorNotification;
-import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
 import com.frx.discstalker.utils.TabConfigUtil;
 import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;

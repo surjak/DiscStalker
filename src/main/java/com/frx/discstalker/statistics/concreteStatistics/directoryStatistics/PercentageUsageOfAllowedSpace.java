@@ -4,17 +4,16 @@ import com.frx.discstalker.Utils;
 import com.frx.discstalker.model.DirectoryNode;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.LongBinding;
-import javafx.beans.property.*;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by surjak on 20.12.2020
@@ -38,11 +37,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
   }
 
   public void setMaxSizeInMB(Long maxSizeInMB) {
-    if (maxSizeInMB != null) {
-      this.maxSizeInMB.set(maxSizeInMB);
-    } else {
-      this.maxSizeInMB.set(DEFAULT_MAX_DIRECTORY_SIZE);
-    }
+    this.maxSizeInMB.set(Objects.requireNonNullElse(maxSizeInMB, DEFAULT_MAX_DIRECTORY_SIZE));
   }
   public long getMaxSizeInMB() {
     return maxSizeInMB.get();
@@ -72,17 +67,7 @@ public class PercentageUsageOfAllowedSpace extends BaseDirectoryStatistics<Integ
       prepareUsedSpaceData()
     ));
     pieChart.setAnimated(false);
-    return new VBox(createTitle(), pieChart);
-  }
-
-  private Label createTitle() {
-    Label label = new Label();
-    label.textProperty().bind(Bindings.concat("Showing for max size of ", maxSizeInMB, " MB"));
-    label.setAlignment(Pos.CENTER);
-    label.setMaxWidth(Double.MAX_VALUE);
-    label.setFont(new Font("Arial", 14));
-    label.setPadding(new Insets(10,0,0,0));
-    return label;
+    return pieChart;
   }
 
   private PieChart.Data prepareFreeSpaceData() {

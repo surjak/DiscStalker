@@ -5,9 +5,6 @@ import com.frx.discstalker.fs.ILiveDirectoryTreeFactory;
 import com.frx.discstalker.fs.LiveDirectoryTree;
 import com.frx.discstalker.model.DirectoryNode;
 import com.frx.discstalker.model.IFileSystemNode;
-import com.frx.discstalker.statistics.StatisticsProvider;
-import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.DirectoryStatisticsCalculator;
-import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.FileStatisticsCalculator;
 import com.frx.discstalker.view.ViewUtils;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
 import io.reactivex.rxjavafx.sources.Flag;
@@ -19,7 +16,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -140,8 +136,6 @@ public class LiveDirectoryController {
   }
 
   private void registerStatisticModel(LiveDirectoryTree liveDirectoryTree) {
-    StatisticsProvider statisticsProvider = new StatisticsProvider(liveDirectoryTree,
-      List.of(new FileStatisticsCalculator(), new DirectoryStatisticsCalculator()));
-    statisticsController.registerStatisticModel(statisticsProvider);
+    statisticsController.registerStatisticModel(liveDirectoryTree);
   }
 }
