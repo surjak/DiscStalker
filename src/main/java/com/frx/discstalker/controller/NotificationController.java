@@ -2,14 +2,16 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.Utils;
 import com.frx.discstalker.service.notification.ErrorNotification;
+import com.frx.discstalker.service.notification.filetree.AlmostMaxSizeDirectoryNotification;
 import com.frx.discstalker.service.notification.filetree.ReachMaxFileSizeNotification;
 import com.frx.discstalker.service.notification.filetree.ReachMaxNumberOfFilesNotification;
-import com.frx.discstalker.service.notification.filetree.AlmostMaxSizeDirectoryNotification;
 import com.frx.discstalker.service.notification.filetree.ReachMaxSizeDirectoryNotification;
 import com.frx.discstalker.statistics.StatisticsProvider;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
 import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.NLargestFiles;
 import io.reactivex.rxjavafx.observables.JavaFxObservable;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -30,6 +32,8 @@ public class NotificationController {
   private TextField maximumSizeField;
 
   private Optional<Long> maximumSize = Optional.empty();
+
+  public BooleanProperty isSet = new SimpleBooleanProperty(false);
 
   @FXML
   private Text maximumSizeDescription;
@@ -74,6 +78,7 @@ public class NotificationController {
   }
 
   public void setNewMaximumSize(Long newMaximumSize) {
+    isSet.setValue(true);
     this.maximumSize = Optional.ofNullable(newMaximumSize);
 
     this.maximumSize.ifPresentOrElse(maximumSize -> {
