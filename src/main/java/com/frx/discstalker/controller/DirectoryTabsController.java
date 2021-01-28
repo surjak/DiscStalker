@@ -2,7 +2,6 @@ package com.frx.discstalker.controller;
 
 import com.frx.discstalker.model.TabConfig;
 import com.frx.discstalker.service.notification.ErrorNotification;
-import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
 import com.frx.discstalker.utils.TabConfigUtil;
 import com.frx.discstalker.utils.FileUtil;
 import com.frx.discstalker.view.ViewLoader;
@@ -85,12 +84,15 @@ public class DirectoryTabsController {
 
   private void loadStatsFrom(Collection<TabConfig> tabConfigs) {
     for (Tab tab : tabControllers.keySet()) {
-      long maxSize = tabConfigs.stream()
-        .filter(tabConfig -> tabConfig.getPath().equals(tab.getText()))
+      final var tabConfig = tabConfigs.stream()
+        .filter(config -> config.getPath().equals(tab.getText()))
         .findFirst()
-        .map(TabConfig::getSize)
-        .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
-      tabControllers.get(tab).getStatisticsController().getNotificationController().setNewMaximumSize(maxSize);
+        .orElseThrow();
+
+      final var notificationController = tabControllers.get(tab).getStatisticsController().getNotificationController();
+      tabConfig.getMaximumSize().ifPresent(notificationController::setNewMaximumSize);
+      tabConfig.getMaximumNumberOfFiles().ifPresent(notificationController::setNewMaximumNumberOfFiles);
+      tabConfig.getMaximumFileSize().ifPresent(notificationController::setNewMaximumFileSize);
     }
   }
 

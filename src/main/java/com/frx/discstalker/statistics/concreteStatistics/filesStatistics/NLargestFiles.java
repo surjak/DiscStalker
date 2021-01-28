@@ -2,28 +2,27 @@ package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 
 import com.frx.discstalker.Utils;
 import com.frx.discstalker.model.FileNode;
-import com.frx.discstalker.statistics.Statistic;
-import com.google.common.base.Strings;
-import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Created by surjak on 20.12.2020
  */
-public class NLargestFiles extends BaseFilesStatistic {
+public class NLargestFiles extends BaseFilesStatistic<List<FileNode>> {
 
   private static final String STATISTIC_NAME = "Largest files";
   private final Integer N;
   private ObservableList<FileNode> filesToDisplay = FXCollections.observableArrayList();
+  private ObjectProperty<List<FileNode>> value = new SimpleObjectProperty<>(List.of());
 
   public NLargestFiles(Integer N) {
     super(STATISTIC_NAME);
@@ -35,33 +34,40 @@ public class NLargestFiles extends BaseFilesStatistic {
   }
 
   @Override
+  public ObjectProperty<List<FileNode>> getValue() {
+    return value;
+  }
+
+  @Override
   public void calculateValue(List<FileNode> fileSystemNodes) {
     removeAllElementsFromDisplayList();
 
-    Map<String, Long> statisticByType = fileSystemNodes.stream()
+    final var fileNodes = fileSystemNodes.stream()
       .sorted(Comparator.comparingLong(FileNode::getSize).reversed())
       .limit(N)
-      .map(this::addFileToDisplayList)
-      .collect(Collectors.toMap(fileNode -> fileNode.getPath().toString(), FileNode::getSize));
+      .collect(Collectors.toList());
 
-    writeIntoValue(statisticByType);
+    fileNodes.forEach(this::addFileToDisplayList);
+
+    writeIntoValue(fileNodes);
   }
 
   private void removeAllElementsFromDisplayList() {
     filesToDisplay.removeIf(data -> true);
   }
 
-  private FileNode addFileToDisplayList(FileNode fileNode) {
+  private void addFileToDisplayList(FileNode fileNode) {
     filesToDisplay.add(fileNode);
-    return fileNode;
   }
 
-  private void writeIntoValue(Map<String, Long> statisticByType) {
+  private void writeIntoValue(List<FileNode> fileNodes) {
+    value.set(fileNodes);
+
     StringBuffer buffer = new StringBuffer();
-    statisticByType.entrySet()
+    fileNodes
       .stream()
-      .sorted((o1, o2) -> -1 * (int) (o1.getValue() - o2.getValue())) //workaround Comparator.comparingLong(Map.Entry::getValue).reversed()
-      .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));
+      .sorted(Comparator.comparing(FileNode::getSize).reversed())
+      .forEach(fileNode -> buffer.append(fileNode.getPath() + " : " + fileNode.getSize() + "\n"));
     setContent(buffer.toString());
   }
 
@@ -120,7 +126,7 @@ public class NLargestFiles extends BaseFilesStatistic {
       protected void updateItem(FileNode item, boolean empty) {
         super.updateItem(item, empty);
         if (null != item) {
-          setText(item.getPath().toString());
+          setText(item.getPath().toString() + "\n" + Utils.convertToMB(item.getSize()) + " MB ");
         } else {
           setText("");
         }

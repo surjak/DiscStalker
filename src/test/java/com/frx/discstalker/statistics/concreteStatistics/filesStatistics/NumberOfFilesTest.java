@@ -3,11 +3,9 @@ package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 import com.frx.discstalker.model.FileNode;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +21,7 @@ class NumberOfFilesTest {
     numberOfFiles.calculateValue(nodes);
 
     //then
-    assertThat(numberOfFiles.getValue().getValue().toString()).isIn("text/pdf : 2\ntext/plain : 2\n", "text/plain : 2\ntext/pdf : 2\n");
+    assertThat(numberOfFiles.getTextValue().getValue().toString()).isIn("text/pdf : 2\ntext/plain : 2\n", "text/plain : 2\ntext/pdf : 2\n");
   }
 
 

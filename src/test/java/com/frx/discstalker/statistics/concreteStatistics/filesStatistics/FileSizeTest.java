@@ -29,7 +29,7 @@ class FileSizeTest {
     fileSizeStatistic.calculateValue(List.of(fileNode1, fileNode2));
 
     //then
-    assertThat(fileSizeStatistic.getValue().getValue().toString()).isIn("text/plain : 10\ntext/pdf : 20\n", "text/pdf : 20\ntext/plain : 10\n");
+    assertThat(fileSizeStatistic.getTextValue().getValue().toString()).isIn("text/plain : 10\ntext/pdf : 20\n", "text/pdf : 20\ntext/plain : 10\n");
   }
 
   @Test
@@ -47,6 +47,6 @@ class FileSizeTest {
     fileSizeStatistic.calculateValue(List.of(fileNode1, fileNode2));
 
     //then
-    assertThat(fileSizeStatistic.getValue().getValue().toString()).isEqualTo("text/plain : 30\n");
+    assertThat(fileSizeStatistic.getTextValue().getValue().toString()).isEqualTo("text/plain : 30\n");
   }
 }

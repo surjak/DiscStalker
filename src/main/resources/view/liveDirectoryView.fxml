@@ -7,8 +7,8 @@
   xmlns="http://javafx.com/javafx"
   xmlns:fx="http://javafx.com/fxml"
   fx:controller="com.frx.discstalker.controller.LiveDirectoryController"
-  prefHeight="550.0" prefWidth="1100.0"
-  minHeight="550.0" minWidth="1100.0"
+  prefHeight="650.0" prefWidth="1100.0"
+  minHeight="650.0" minWidth="1100.0"
   stylesheets="css/liveDirectoryView.css"
   styleClass="main-pane"
 >

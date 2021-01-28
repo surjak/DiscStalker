@@ -1,44 +1,33 @@
 package com.frx.discstalker.model;
 
+import java.util.Optional;
+
 public class TabConfig {
   private String path;
-  private long size;
-  private boolean isDirectory;
+  private Long maximumSize;
+  private Long maximumNumberOfFiles;
+  private Long maximumFileSize;
 
-  public TabConfig() {
-  }
-
-  public TabConfig(String path, long size) {
-    this(path, size, false);
-  }
-
-  public TabConfig(String path, long size, boolean isDirectory) {
+  public TabConfig(String path, Long maximumSize, Long maximumNumberOfFiles, Long maximumFileSize) {
     this.path = path;
-    this.size = size;
-    this.isDirectory = isDirectory;
+    this.maximumSize = maximumSize;
+    this.maximumNumberOfFiles = maximumNumberOfFiles;
+    this.maximumFileSize = maximumFileSize;
   }
 
   public String getPath() {
     return path;
   }
 
-  public void setPath(String path) {
-    this.path = path;
+  public Optional<Long> getMaximumSize() {
+    return Optional.ofNullable(maximumSize);
   }
 
-  public long getSize() {
-    return size;
+  public Optional<Long> getMaximumNumberOfFiles() {
+    return Optional.ofNullable(maximumNumberOfFiles);
   }
 
-  public void setSize(long size) {
-    this.size = size;
-  }
-
-  public void setDirectory(boolean directory) {
-    isDirectory = directory;
-  }
-
-  public boolean isDirectory() {
-    return isDirectory;
+  public Optional<Long> getMaximumFileSize() {
+    return Optional.ofNullable(maximumFileSize);
   }
 }

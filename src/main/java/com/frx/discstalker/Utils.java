@@ -26,4 +26,8 @@ public class Utils {
 
     return alert;
   }
+
+  public static Long convertToMB(Long bytes) {
+    return bytes / 1_000_000;
+  }
 }

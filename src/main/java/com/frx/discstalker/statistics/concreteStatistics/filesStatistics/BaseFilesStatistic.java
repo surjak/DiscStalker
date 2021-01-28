@@ -8,12 +8,12 @@ import javafx.beans.property.StringProperty;
 /**
  * Created by surjak on 19.12.2020
  */
-public abstract class BaseFilesStatistic implements FilesStatistic {
+public abstract class BaseFilesStatistic<T> implements FilesStatistic<T> {
   private final String STATISTIC_NAME;
-  private SimpleObjectProperty content;
+  private StringProperty content;
 
   public BaseFilesStatistic(String statisticName) {
-    this.content = new SimpleObjectProperty("");
+    this.content = new SimpleStringProperty("");
     this.STATISTIC_NAME = statisticName;
   }
 
@@ -23,7 +23,7 @@ public abstract class BaseFilesStatistic implements FilesStatistic {
   }
 
   @Override
-  public ObjectProperty getValue() {
+  public StringProperty getTextValue() {
     return content;
   }
 

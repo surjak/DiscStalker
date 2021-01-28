@@ -3,7 +3,9 @@ package com.frx.discstalker.statistics.concreteStatistics.filesStatistics;
 import com.frx.discstalker.model.FileNode;
 import com.frx.discstalker.statistics.concreteStatistics.filesStatistics.valueConverters.IntegerStringConverter;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Side;
@@ -23,7 +25,7 @@ import static java.util.stream.Collectors.*;
 /**
  * Created by surjak on 19.12.2020
  */
-public class NumberOfFiles extends BaseFilesStatistic {
+public class NumberOfFiles extends BaseFilesStatistic<Map<String, Long>> {
 
   private static final String STATISTIC_NAME = "Number of files grouped by file type";
   private static final String X_LABEL = "File Type/Extension";
@@ -31,9 +33,15 @@ public class NumberOfFiles extends BaseFilesStatistic {
   private DoubleProperty doubleProperty = new SimpleDoubleProperty(400);
   private ObservableList<XYChart.Data<String, Number>> chartData = FXCollections.observableArrayList();
   private ObservableList<String> keys = FXCollections.observableArrayList();
+  private ObjectProperty<Map<String, Long>> value = new SimpleObjectProperty<>(Map.of());
 
   public NumberOfFiles() {
     super(STATISTIC_NAME);
+  }
+
+  @Override
+  public ObjectProperty<Map<String, Long>> getValue() {
+    return value;
   }
 
   @Override
@@ -44,6 +52,8 @@ public class NumberOfFiles extends BaseFilesStatistic {
   }
 
   private void writeIntoValue(Map<String, Long> statisticByType) {
+    value.set(statisticByType);
+
     StringBuffer buffer = new StringBuffer();
     statisticByType.entrySet()
       .forEach(stringLongEntry -> buffer.append(stringLongEntry.getKey() + " : " + stringLongEntry.getValue() + "\n"));

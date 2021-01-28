@@ -1,6 +1,8 @@
 package com.frx.discstalker.utils;
 
 import com.frx.discstalker.controller.LiveDirectoryController;
+import com.frx.discstalker.controller.NotificationController;
+import com.frx.discstalker.controller.StatisticsController;
 import com.frx.discstalker.model.TabConfig;
 import com.frx.discstalker.statistics.concreteStatistics.directoryStatistics.PercentageUsageOfAllowedSpace;
 import com.google.gson.Gson;
@@ -27,14 +29,15 @@ public class TabConfigUtil {
     List<TabConfig> tabConfigs = new ArrayList<>();
     for (LiveDirectoryController controller : liveDirectoryControllers) {
       String tabPath = controller.getPathString();
-      Long maxSize = controller
-        .getStatisticsController()
-        .getStatisticsProvider()
-        .findConcreteStatisticBy(PercentageUsageOfAllowedSpace.class)
-        .map(PercentageUsageOfAllowedSpace.class::cast)
-        .map(PercentageUsageOfAllowedSpace::getMaxSizeInMB)
-        .orElse(PercentageUsageOfAllowedSpace.DEFAULT_MAX_DIRECTORY_SIZE);
-      tabConfigs.add(new TabConfig(tabPath, maxSize, true));
+      NotificationController notificationController = controller.getStatisticsController().getNotificationController();
+      tabConfigs.add(
+        new TabConfig(
+          tabPath,
+          notificationController.getMaximumSize().orElse(null),
+          notificationController.getMaximumNumberOfFiles().orElse(null),
+          notificationController.getMaximumFileSize().orElse(null)
+        )
+      );
     }
     return tabConfigs;
   }
